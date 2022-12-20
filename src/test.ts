@@ -1,3 +1,3 @@
-export function test() {
-    console.log('hi1111111');
+export function test():any {
+  console.log('hi1111111');
 }
