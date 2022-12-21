@@ -1,0 +1,5 @@
+/*@import "./foo.scss";*/
+
+body{
+    color: red;
+}
