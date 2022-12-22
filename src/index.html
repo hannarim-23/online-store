@@ -1,14 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Store</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Store</title>
+  <script src="./script.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <p>Everything is OK!</p> 
-    <img src="./img/rs_school_js.svg" style="width: 150px;" alt="logo">
-    
+  <div class="header">
+    <div class="wrapper header-style">
+      <a href="#" class="logoShop"><!--др картинка? + link-->
+        <img src="./img/shop-logo.png" alt="logo">
+      </a>
+      <div class="search_containerInpur">
+        <button class="btn-search"></button><!--btn action-->
+        <input id="catalogSearch" class="search" type="text" placeholder="Product search">
+      </div>
+      <div><span>Total Price </span><span class="totalPrice">0$</span></div>
+      <div class="shoppingСart"><!-- link to cart page-->
+        <img src="./img/shopping-cart_icon.svg" alt="shopping-cart">
+        <span class="cartCaunt">0</span><!--пример, данные только при добавлении-->
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="main">
+    <div class="wrapper">
+
+    </div>
+  </div>
+
+
+  <div class="footer">
+    <div class="wrapper footer-style">
+      <a href="https://rs.school/js/">
+        <img class="logoRS" src="./img/rs_school_js.svg" alt="logo">
+      </a>
+      <div class="authors">
+        <a href="https://github.com/hannarim-23">Hannah</a>
+        <span> & </span>
+        <a href="https://github.com/lisadobruk">Lisa</a>
+      </div>
+      <div class="year"><p>2023</p></div>
+    </div>
+  </div>
 </body>
 </html>
