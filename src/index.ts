@@ -5,33 +5,12 @@ import cart from './pages/cart';
 import error from './pages/404';
 
 export let mainContainer = document.querySelector('#main-container');/*const*/
-//const mainContainer = document.querySelector('#main-container');
-let links = document.querySelectorAll('[data-link]'); /*???*/
+let links = document.querySelectorAll('[data-link]'); /**/
 
 type Rout = {
 		path: string,
 	 	template: () => void,
 }
-/*
-type Rout = [
-	{
-		path: string,
-	 	template: () => void,
-    }, 
-	{
-		path: string,
-		template: () => void,
-	}, 
-	{
-		path: string,
-		template: () => void,
-	}, 
-	{
-		path: string,
-		template: () => void,
-	}, 
-]
-*/
 
 function router (event: MouseEvent) {
 	event.preventDefault();
@@ -46,8 +25,7 @@ function router (event: MouseEvent) {
 		let html = (route.template)();
 	}
 }
-/*
-const routes: Rout = [*/
+
 const routes: Rout[] = [
 	{
 		path: '404',
