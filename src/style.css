@@ -2,88 +2,92 @@
 @import "normalize";
 
 body{
-  color: white;
-}
-.wrapper{
-  max-width: 90%;
-  margin: 0 auto;
-}
-.footer, .header{
-  height: 100px;
-  background-color: #1c7bf7;
-}
-.header-style, .footer-style{
-  display: flex;
-  align-items: center;
-  height: 100%;
-  justify-content: space-around;
-}
-.main{
-  height: calc(100vh - 200px);
-}
-
-
-
-.logoShop img{
-  width: 200px;
-}
-
-.search_containerInpur{
-  width: 300px;
-  background-color:white;
-  height: 30px;
-  border-radius: 30px;
-  position: relative;
-}
-input[type="text"]{
-  border-radius:30px;
-  width: calc(100% - 30px);
-  height: 100%;
-  right: 0;
-  position: absolute;
-  padding-left: 10px;
-  opacity: .5;
-}
-.btn-search{
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background-color:green; /*добавить лупу вместо цвета*/
-  border-radius:30px;
-  border: none;
-  /*background-image: url("./img/search-zoom.svg");/*лупа путь ???*/
-}
-
-.totalPrice{
-  color: gold;
-}
-
-.shoppingСart{
-  position: relative;
-  width: 50px;
-}
-.shoppingСart img{
-  width: 50px;
-}
-.cartCaunt{
-  background: #E62E6B;
-  position: absolute;
-  top: 5px;
-  left: 20px;
-  border-radius: 50px;
-  padding: 0 5px;
-}
-
-
-.logoRS{
-  width: 100px;
-}
-a:visited{
-  color:white;;
-}
-a:hover{
-  color:black
-}
-a:active{
-  color:#E62E6B;
-}
+    color: white;
+    background-color: green;/*цвет на замену, прото чтоб видеть данные*/
+  }
+  .wrapper{
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  .footer, .header{
+    height: 100px;
+    background-color: #1c7bf7;
+  }
+  .header-style, .footer-style{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: space-around;
+  }
+  .main{
+    height: calc(100vh - 200px);
+  }
+  
+  
+  
+  .logoShop img{
+    width: 200px;
+  }
+  
+  .search_containerInpur{
+    width: 300px;
+    background-color:white;
+    height: 30px;
+    border-radius: 30px;
+    position: relative;
+  }
+  input[type="text"]{
+    border-radius:30px;
+    width: calc(100% - 30px);
+    height: 100%;
+    right: 0;
+    position: absolute;
+    padding-left: 10px;
+    opacity: .5;
+  }
+  .btnDel{
+    position: absolute;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-radius:30px;
+    border: none;
+    background-color:rgb(187, 211, 211);
+  }
+  .btnDel:hover{
+    background-color:#E62E6B;
+  }
+  
+  .totalPrice{
+    color: gold;
+  }
+  
+  .shoppingСart{
+    position: relative;
+    width: 50px;
+  }
+  .shoppingСart img{
+    width: 50px;
+  }
+  .cartCaunt{
+    background: #E62E6B;
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    border-radius: 50px;
+    padding: 0 5px;
+  }
+  
+  
+  .logoRS{
+    width: 100px;
+  }
+  a:visited{
+    color:white;;
+  }
+  a:hover{
+    color:black
+  }
+  a:active{
+    color:#E62E6B;
+  }

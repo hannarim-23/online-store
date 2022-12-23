@@ -1,3 +1,6 @@
+/*!*********************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/normalize.css ***!
+  \*********************************************************************/
 *{
     box-sizing: border-box;
 }
@@ -29,9 +32,8 @@ html {
     line-height: 1.15;
     margin: 0;
   }
-  button, input {
+  button,input {
     overflow: visible;
-    cursor: pointer;
   }
   button,select {
     text-transform: none;
@@ -66,3 +68,11 @@ html {
     outline: none;
     border: none;
   }
+/*!*****************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/style.css ***!
+  \*****************************************************************/
+/*@import "./foo.scss";*/
+
+body{
+    color: red;
+}
