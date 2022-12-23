@@ -5,50 +5,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Online Store</title>
-  <script src="./script.js"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="header">
-    <div class="wrapper header-style">
-      <a href="#" class="logoShop"><!--др картинка? + link-->
-        <img src="./img/shop-logo.png" alt="logo">
-      </a>
-      <div class="search_containerInpur">
-        <button class="btn-search"></button><!--btn action-->
-        <input id="catalogSearch" class="search" type="text" placeholder="Product search">
-      </div>
-      <div><span>Total Price </span><span class="totalPrice">0$</span></div>
-      <a href="#" class="shoppingСart"><!-- link to cart page-->
-        <img src="./img/shopping-cart_icon.svg" alt="shopping-cart">
-        <span class="cartCaunt">0</span><!--пример, данные только при добавлении-->
-      </a>
 
-    </div>
-  </div>
+    <header class="header-container" >
+        <a href="/" class="link" id="main-link" data-link>Main</a>
+        <a href="/cart" class="link" id="cart-link" data-link>Cart</a>
+        <a href="/product1" class="link" id="product-link" data-link>Product1</a>
+        <a href="/product2" class="link" id="product-link" data-link>Product2</a>
+    </header>
+    
+    <main class="main-container"  id="main-container"></main>
 
-
-
-  <div class="main">
-    <div class="wrapper">
-
-    </div>
-  </div>
-
-
-  <div class="footer">
-    <div class="wrapper footer-style">
-      <a href="https://rs.school/js/">
-        <img class="logoRS" src="./img/rs_school_js.svg" alt="logo">
-      </a>
-      <div class="authors">
-        <a href="https://github.com/hannarim-23">Hannah</a>
-        <span> & </span>
-        <a href="https://github.com/lisadobruk">Lisa</a>
-      </div>
-      <div class="year"><p>2023</p></div>
-    </div>
-  </div>
+    <footer></footer>
 </body>
 </html>
