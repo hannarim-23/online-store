@@ -36,6 +36,14 @@ module.exports = {
       }
     ],
   },
+  devServer: {
+    historyApiFallback: true,
+    static: {
+     directory: path.join(__dirname, "/"),
+   },
+    port: 8081,
+    open: true
+  },
   resolve: {
     extensions: ['.ts', '.js'],
   },
@@ -53,3 +61,5 @@ module.exports = {
     }),
   ],
 };
+
+
