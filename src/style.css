@@ -1,5 +1,6 @@
 /*@import "./foo.scss";*/
-@import "normalize";
+@import "./styles/normalize.css";
+@import "./styles/cart.css";
 
 body{
     color: white;
@@ -36,7 +37,7 @@ body{
     border-radius: 30px;
     position: relative;
   }
-  input[type="text"]{
+  #catalogSearch input[type="text"]{
     border-radius:30px;
     width: calc(100% - 30px);
     height: 100%;
@@ -69,7 +70,7 @@ body{
   .shoppingСart img{
     width: 50px;
   }
-  .cartCaunt{
+  .cartCount{
     background: #E62E6B;
     position: absolute;
     top: 5px;
@@ -91,3 +92,5 @@ body{
   a:active{
     color:#E62E6B;
   }
+
+  

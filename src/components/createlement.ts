@@ -1,4 +1,4 @@
-function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{
+export function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{
     let element = document.createElement(tagName);
     element.className = className;
     if(id) element.id = id;
