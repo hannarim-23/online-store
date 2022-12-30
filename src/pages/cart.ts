@@ -118,8 +118,10 @@ function renderCart(cartObject: ObjectType){
     inputProductsOnPage.addEventListener('change', (event: Event)=>{
         if(event.target && event.target instanceof HTMLInputElement){
             rows = Number(event.target.value);
+            currentPage = 1;
             let url = new URL(window.location.href);
             url.searchParams.set('product', event.target.value);
+            url.searchParams.set('page', String(currentPage));
             window.history.pushState({},'', url.href);
         displayProduct(arrKey, rows, currentPage);
         showPagination(arrKey, rows);
