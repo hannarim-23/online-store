@@ -1,6 +1,7 @@
 import { mainContainer } from "../index";
 import products from "../components/products";
 import { createHtmlElement } from "../components/createlement";
+import { showModal } from "../components/modal";
 
 const cartCountElement = document.querySelector('.cartCount');
 const totalPriceElement = document.querySelector('.totalPrice');
@@ -228,6 +229,7 @@ function renderCart(cartObject: ObjectType){
         changeTotalPriceWithPromo(sumPromoNumber);
         renderPromo(promoActive);
     }
+    btnBuyNow.addEventListener('click', showModal);
 
     return sectionCart;
 }
