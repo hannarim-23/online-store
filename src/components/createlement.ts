@@ -1,11 +1,10 @@
-function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{
+export function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{
     let element = document.createElement(tagName);
     element.className = className;
     if(id) element.id = id;
     if(innerText) element.innerText = innerText;
     return element;
 }
-
 
 
 let section1 = createHtmlElement("section", "section-property", "property", "This is very good");

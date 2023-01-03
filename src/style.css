@@ -1,5 +1,6 @@
-/*@import "./foo.scss";*/
-@import "normalize";
+/*@import "./styles/foo.scss";*/
+@import "./styles/normalize";
+@import "./styles/main-page";
 
 body{
     color: white;
@@ -91,3 +92,5 @@ body{
   a:active{
     color:#E62E6B;
   }
+
+
