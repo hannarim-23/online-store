@@ -1,6 +1,7 @@
 /*@import "./foo.scss";*/
 @import "./styles/normalize.css";
 @import "./styles/cart.css";
+@import "./styles/modal.css";
 
 body{
     color: white;
