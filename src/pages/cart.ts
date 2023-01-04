@@ -11,15 +11,14 @@ type ObjectType = {
     [key: string] : number
 }
 
-let cartObject: ObjectType = {
+export let cartObject: ObjectType = {
     '1': 1,
     '27': 1,
-    '33': 1,
+    '18': 1,
     '57': 1,
     '38': 2,
-    '97': 1,
-    '45': 3,
-    '85': 4,
+    '81': 1,
+    '54': 1,
 };
 
 //promocodes
@@ -90,7 +89,7 @@ promoText.prepend(promoTextAddContainer);
 // render cart and pagination 
 let currentPage: number = 1;
 let rows: number;
-function renderCart(cartObject: ObjectType){
+export function renderCart(cartObject: ObjectType){
     sectionCart.innerHTML = '';
     const arrKey = Object.keys(cartObject);
     const paginationContainer = createHtmlElement('div', 'pagination-container');
@@ -110,8 +109,6 @@ function renderCart(cartObject: ObjectType){
         promoInput.value = '';
         promoInput.placeholder = 'Enter the promo code';
     }
-    
- 
     if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement) rows = Number(inputProductsOnPage.value);
         displayProduct(arrKey, rows, currentPage);
         showPagination(arrKey, rows);
