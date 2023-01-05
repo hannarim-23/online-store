@@ -4,15 +4,18 @@
 
 body{
     color: white;
-    background-color: green;/*цвет на замену, прото чтоб видеть данные*/
+    background-color: #e0f0ff;/*цвет на замену, прото чтоб видеть данные*/
   }
   .wrapper{
     max-width: 90%;
     margin: 0 auto;
   }
   .footer, .header{
-    height: 100px;
+    height: 90px;
     background-color: #1c7bf7;
+  }
+  .footer{
+    height: 70px;
   }
   .header-style, .footer-style{
     display: flex;
@@ -21,11 +24,8 @@ body{
     justify-content: space-around;
   }
   .main{
-    height: calc(100vh - 200px);
+    min-height: calc(100vh - 160px);
   }
-  
-  
-  
   .logoShop img{
     width: 200px;
   }

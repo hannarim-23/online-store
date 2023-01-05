@@ -1,3 +1,5 @@
+import {IProduct} from "./interface";
+
 export function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{
     let element = document.createElement(tagName);
     element.className = className;
@@ -7,23 +9,31 @@ export function createHtmlElement (tagName: string, className: string, id?: stri
 }
 
 
-let section1 = createHtmlElement("section", "section-property", "property", "This is very good");
 
-export function changeMain(text: string){
-  
-let main = document.querySelector(".main-container");
+export function createItem (tagParent: HTMLElement , result: IProduct[]): void{
+    tagParent.innerHTML = '';
 
-    if(main){
-        console.log(`${text}`);
-        main.append(section1);
-    };
-    return main;
+    for (let i = 0; i < result.length; i += 1) {
+        let item = createHtmlElement('div', 'item item-block', `${result[i].id}`);
+        tagParent.append(item);
+        let imgBox = createHtmlElement('div', 'img-box');
+        item.append(imgBox);
+        let img = new Image();
+        img.src = result[i].thumbnail;
+        imgBox.append(img);
+        let contentBox = createHtmlElement('div', 'content-box');
+        item.append(contentBox);
+        let price = createHtmlElement('span', 'price price-block');
+        contentBox.append(price);
+        price.innerHTML = String(result[i].price) + '$';
+        let title = createHtmlElement('div', 'title');
+        contentBox.append(title);
+        title.innerHTML = result[i].title;
+        let btnBlock = createHtmlElement('div', 'btn-Block');
+        contentBox.append(btnBlock);
+        let add = createHtmlElement('button', 'btn-item btn', ``, 'Add');
+        btnBlock.append(add);
+        let details = createHtmlElement('button', 'btn-item btn', '', 'Details');
+        btnBlock.append(details);
+    }
 }
-
-
-/*(() => {
-    // get tab id from the hash
-    const tabId = hashes.get(window.location.hash);
-    // update the tab
-    if (tabId) update(tabId);
-})();*/

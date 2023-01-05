@@ -3,8 +3,12 @@ import { createHtmlElement } from "../components/createlement";
 import { products } from "../components/products";
 import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "../components/firstValues";
 import { getChecked } from "../components/filter";
-let found:number;
+import { sorting } from "../components/btnFunc";
 
+
+var found:number = products.length;
+
+//delete localStorage.found;
 
 export default function main(): void {
     if (mainContainer) {
@@ -25,7 +29,7 @@ export default function main(): void {
         const stockFilter = createHtmlElement('div', 'stock-filter filter');
         priceFilter.after(stockFilter);
 
-
+/*-----------------Category-----------------------*/
         let checkedCategory: string[] = []; //checked values
         const pCategory = createHtmlElement('p', 'p-style', '', 'Category');
         categoryFilter.append(pCategory);
@@ -41,19 +45,33 @@ export default function main(): void {
             containerCategory.append(input);
             containerCategory.append(label);
             containerCategory.append(document.createElement('br'));
-
+/*
             input.oninput = function(){
-                //console.log('input=', input.id);//
-                //console.log('label=', label.innerText);//
                 checkedCategory.push(label.innerText);
                 //console.log('checkedCategory=', checkedCategory);//
                 //getChecked(products, checkedCategory, checkedBrand);//fun
-                getChecked(showProducts, products, checkedCategory, checkedBrand);
-                //found = getChecked(products, checkedCategory, checkedBrand).length;
+                //getChecked(showProducts, products, checkedCategory, checkedBrand);
+                
+                found = getChecked(showProducts,products, checkedCategory, checkedBrand).length;
                 //console.log('found=', found);//
-                return checkedCategory;
+                numOfFound.innerHTML = `Found: ${found}`;
+                //return checkedCategory;
+                if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
             } ;
+*/ //-----------------------------------++++++++++++++++++----------------
+            input.addEventListener('change', (event) =>{
+                input.setAttribute('checked', 'checked');
+                checkedCategory.push(label.innerText);
+
+
+                found = getChecked(showProducts,products, checkedCategory, checkedBrand).length;
+                numOfFound.innerHTML = `Found: ${found}`;
+                if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+                sorting(localStorage.sortId, getChecked(showProducts,products, checkedCategory, checkedBrand));
+            });
         }
+
+/*-----------------Brand-----------------------*/
 
         let checkedBrand: string[] = []; //checked values
         const pBrand = createHtmlElement('p', 'p-style', '', 'Brand');
@@ -63,25 +81,27 @@ export default function main(): void {
         let inputVarBrand = getBrands(products);
 //console.log('qwe', inputVarBrand);
         for (let i = 0; i < inputVarBrand.length; i += 1) {
-            let input = createHtmlElement('input', 'input-line', '', `var${[i]}`);
+            let input = createHtmlElement('input', 'input-line', `v${[i]}`);
             input.setAttribute("type", "checkbox");
             let label = createHtmlElement('label', 'label-line', '', inputVarBrand[i]);
-            label.setAttribute("for", `var${[i]}`);
+            label.setAttribute("for", `v${[i]}`);
             containerBrand.append(input);
             containerBrand.append(label);
             containerBrand.append(document.createElement('br'));
-            
-            input.oninput = function(){
-                //console.log('input=', input.id);//
-                //console.log('label=', label.innerText);//
+//-----------------------------------++++++++++++++++++----------------
+            input.oninput = function() {
                 checkedBrand.push(label.innerText);
-                //console.log('checkedBrand=', checkedBrand);//
-                //getChecked(products, checkedCategory, checkedBrand);//fun
-                getChecked(showProducts, products, checkedCategory, checkedBrand);
+                
+                
+                
                 found = getChecked(showProducts, products, checkedCategory, checkedBrand).length;
-                //console.log('found=', found);//
+                numOfFound.innerHTML = `Found: ${found}`;
+                if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+                sorting(localStorage.sortId, getChecked(showProducts,products, checkedCategory, checkedBrand));
             } ;
         }
+
+/*-----------Price----------*/
 
         const pPrice = createHtmlElement('p', 'p-style', '', 'Price');
         priceFilter.append(pPrice);
@@ -96,8 +116,6 @@ export default function main(): void {
         const rangeBox = createHtmlElement('div', 'range-box');
         priceFilter.append(rangeBox);
 
-
-/*-----------Price----------*/
         const rangePrice1 = createHtmlElement('input', 'input-range');
         rangeBox.append(rangePrice1);
         rangePrice1.setAttribute("type", "range"); 
@@ -131,20 +149,6 @@ export default function main(): void {
         stockFilter.append(rangeStock);
         rangeStock.setAttribute("type", "range");
 
-/*---------------btns copy + reset-----------*/
-
-        const btnsCopyLink = createHtmlElement('div', 'copy-link-box');
-        sideBar.prepend(btnsCopyLink);
-
-        const btnCopy = createHtmlElement('button', 'drop-btn btn', '', 'Copy filter');
-        btnsCopyLink.append(btnCopy);
-        const btnReset = createHtmlElement('button', 'drop-btn btn', '', 'Reset filter');
-        btnsCopyLink.append(btnReset);
-        //btnReset.addEventListener('click', resetFun());
-        /* => {
-            window.location.href = '../quiz/index.html';
-        });
-
 /*-----------------Sort-----------------------*/
 
         const sortContainer = createHtmlElement('div', 'sort-container');
@@ -164,39 +168,128 @@ export default function main(): void {
         menuSort.append(sortMinMax);
         const sortMaxMin = createHtmlElement('li', 'content', '', 'From max price to min');
         menuSort.append(sortMaxMin);
-
-        const numOfFound = createHtmlElement('p', 'p-found', '', 'Found: 0');
-        //numOfFound.innerHTML = 'Found: ${found}';
+        
+        const numOfFound = createHtmlElement('p', 'p-found', '', `Found: ${found}`);
         sortContainer.append(numOfFound);
 
         const viewSort = createHtmlElement('div', 'view-sort', '', '');/*view*/
         sortContainer.append(viewSort);
-        const lineView = new Image(); /*document.createElement('img');*/
+        const lineView = new Image();
         lineView.src = '/src/assets/line.svg';
+        lineView.setAttribute("class", "view");
         viewSort.append(lineView);
         const blockView = new Image();
         blockView.src = '/src/assets/block.svg';
+        blockView.setAttribute("class", "active view");
         viewSort.append(blockView);
 
 /*---------------Content-----------*/
 
-        const showProducts = createHtmlElement('div', 'main-show');
+        const showProducts = createHtmlElement('div', 'main-show block');
         mainPage.append(showProducts);
 
-//let items = getChecked(showProducts, products, checkedCategory, checkedBrand);//fun
-found = getChecked(showProducts, products, checkedCategory, checkedBrand).length;
-console.log('found=', found);//
-console.log('00000checkedBrand=', checkedCategory);//
+        getChecked(showProducts, products, checkedCategory, checkedBrand);
 
+        let sortList = menuSort.children;
+        for (let i = 0; i < sortList.length; i++){
+            sortList[i].addEventListener("click", function() {
+                localStorage.sortId = i;
+                console.log ('localStorage.sortId=====', localStorage.sortId);
+                sorting(localStorage.sortId, getChecked(showProducts, products, checkedCategory, checkedBrand));
+            });
+        }
+//        console.log ('sorting', sortList);
+
+
+/*---------------btns lineView & blockView-----------*/
+
+        let collectionItem = document.querySelectorAll('.item');
+        let collectionPrice = document.querySelectorAll('.price');
+        let collectionBtnItem = document.querySelectorAll('.btn-item');
+        let collectionBtnBlock = document.querySelectorAll('.btn-Block');
+//localStorage.style =
+        blockView.addEventListener("click", function() {
+            blockView.setAttribute("class", "active view");
+            lineView.setAttribute("class", "view");
+            showProducts.setAttribute("class", "main-show block");
+
+            collectionItem.forEach(function(elem) { 
+                elem.setAttribute("class", "item item-block");
+              });
+            collectionPrice.forEach(function(elem) { 
+                elem.setAttribute("class", "price price-block");
+              });
+              collectionBtnItem.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-item btn btn-item-block");
+            });
+            collectionBtnBlock.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-Block");
+            });
+        });
+
+        lineView.addEventListener("click", function() {
+            blockView.setAttribute("class", "view");
+            lineView.setAttribute("class", "active view");
+            showProducts.setAttribute("class", "main-show line");
+
+            collectionItem.forEach(function(elem) { 
+                elem.setAttribute("class", "item item-line");
+              });
+            collectionPrice.forEach(function(elem) { 
+                elem.setAttribute("class", "price price-line");
+              });
+            collectionBtnItem.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-item btn btn-item-line");
+            });
+            collectionBtnBlock.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-Block btn-Block-line");
+            });
+        });
+
+/*---------------btns Add & Details-----------*/
+
+
+
+/*---------------btns copy + reset-----------*/
+
+        const btnsCopyLink = createHtmlElement('div', 'copy-link-box');
+        sideBar.prepend(btnsCopyLink);
+
+        const btnCopy = createHtmlElement('button', 'drop-btn btn', '', 'Copy filter');
+        btnsCopyLink.append(btnCopy);
+        const btnReset = createHtmlElement('button', 'drop-btn btn', '', 'Reset filter');
+        btnsCopyLink.append(btnReset);
+
+
+//---------------------------------------------------
+        btnReset.addEventListener('click', () => {//!!!!!!!!!!!
+            checkedCategory.length = 0;
+            checkedBrand= [];
+
+
+
+            getChecked(showProducts, products, checkedCategory, checkedBrand);
+        });
+
+
+
+
+        
 /*
-function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement
+        function resetFun(category: string[], brand: string[], Price?: string[], Stock?: string[]): void {
+            category.length = 0;
+            console.log('delet', category);
+            brand = [];
+          
+            getChecked(showProducts, products, category, brand);
+          }
+
 */
-        
 
-
-        
-
-
+        //btnReset.addEventListener('click', resetFun());
+        /* => {
+            window.location.href = '../quiz/index.html';
+        });
+*/
     } 
 }
-

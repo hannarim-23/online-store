@@ -1,5 +1,9 @@
-import {IProduct} from "./interface";
-import { createHtmlElement } from "./createlement";
+import { IProduct } from "./interface";
+import { createItem } from "./createlement";
+import { sorting } from "./btnFunc";
+//import { createHtmlElement, createItem } from "./createlement";
+
+
 
 function getNumber(listChecked: string[]): string[] { //чекнутые нечетное колличесво раз
     let newMas:string[] = [...new Set(listChecked)];
@@ -17,59 +21,43 @@ function getNumber(listChecked: string[]): string[] { //чекнутые неч�
     return arr;
 }
 
-/*+++++++++++++++++++++++
-function filterOneParametr(arr: IProduct[], arrCheck: string[], key: string){
+
+
+/*+++++++++++++++++++++++*/
+function filterOneParametr<T>(arr: T[], arrCheck: any[], key: keyof T){
     let result = arr.filter(elem => arrCheck.includes(elem[key]));
     return result;
 }
-*/
+
+
 export function getChecked(tagParent: HTMLElement , mas: IProduct[], category: string[], brand: string[], Price?: string[], Stock?: string[]): IProduct[] {
     let newcategory = getNumber(category); //console.log('000newcategory', newcategory);
     let newbrand = getNumber(brand);//console.log('brand= ', brand);
-    let result: IProduct[] = [];
+    let result;
 
+    //if(sorting)
     if (newcategory.length !== 0) {
-        //result = filterOneParametr(mas, newcategory, category);
+        //!   result = filterOneParametr<IProduct>(mas, newcategory, category);
+        //console.log('000newcategory', result);
         result = mas.filter(elem => newcategory.includes(elem.category[0].toUpperCase() + elem.category.slice(1).toLowerCase()));
-        //console.log('result1= ', result);
     } else {
         result = mas;
     }
 
     if (newbrand.length !== 0) {
         result = result.filter(elem => newbrand.includes(elem.brand[0].toUpperCase() + elem.brand.slice(1).toLowerCase()));
-        //console.log('result2= ', result);
     }
 
 
+    
+    
+    
+    
+    if (localStorage.sortId) result = sorting(localStorage.sortId, result);
+    
+    createItem (tagParent, result);
+    console.log('localStorage.sortId.......= ', localStorage.sortId);
 
-    for (let i = 0; i < result.length; i += 1) {
-        let item = createHtmlElement('div', 'item');
-        tagParent.append(item);
-        let imgBox = createHtmlElement('div', 'img-box');
-        item.append(imgBox);
-        let img = new Image();
-        img.src = result[i].thumbnail;
-        imgBox.append(img);
-        let contentBox = createHtmlElement('div', 'content-box');
-        item.append(contentBox);
-        let price = createHtmlElement('span', 'price');
-        contentBox.append(price);
-        price.innerHTML = String(result[i].price) + '$';
-        let title = createHtmlElement('div', 'title');
-        contentBox.append(title);
-        title.innerHTML = result[i].title;
-        let btnBlock = createHtmlElement('div', 'btn-Block');
-        contentBox.append(btnBlock);
-        let add = createHtmlElement('button', 'btn-item', '', 'Add');
-        btnBlock.append(add);
-        let details = createHtmlElement('button', 'btn-item', '', 'Details');
-        btnBlock.append(details);
-
-    }
-
-
-console.log('result.......= ', result);
-return result;
+    return result;
 }
 
