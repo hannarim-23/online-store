@@ -4,7 +4,8 @@ import main from './pages/main';
 import cart from './pages/cart';
 import error from './pages/404';
 
-export let mainContainer = document.querySelector('#main-container');/*const*/
+export const mainContainer = document.querySelector('#main-container');
+export const overlay = document.querySelector('.overlay');
 let links = document.querySelectorAll('[data-link]'); /**/
 
 type Rout = {

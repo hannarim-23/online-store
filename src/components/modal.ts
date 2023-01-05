@@ -2,13 +2,13 @@ import { createHtmlElement } from "./createlement";
 import { cartObject } from "../pages/cart";
 import { renderCart } from "../pages/cart";
 import { logoBank } from "./logoBank";
+import { overlay } from "../index";
 
 let inputNumberCart = createHtmlElement('input', 'modal-input-number-cart modal-input', 'modal-input-number-cart');
 const inputValid = createHtmlElement('input', 'modal-input-valid modal-input', 'modal-input-valid');
 const inputCcv = createHtmlElement('input', 'modal-input-ccv modal-input', 'modal-input-ccv');
 
 export function showModal(){
-    const overlay = document.querySelector('.overlay');
     if(overlay){
     overlay.classList.add("active");
     const modalWindow = createHtmlElement('div', 'modal-window');
@@ -181,12 +181,12 @@ export function showModal(){
         let numberOfInvalid = 0;
         inputs.forEach(el =>{
             if(el instanceof HTMLInputElement){
-      if(!el.checkValidity()){
-        numberOfInvalid +=1;
-      }else{
-          numberOfInvalid = numberOfInvalid;
-      }
-        }})
+                if(!el.checkValidity()){
+                    numberOfInvalid +=1;
+                }else{
+                    numberOfInvalid = numberOfInvalid;
+                }
+            }})
         if(numberOfInvalid === 0){
             modalWindow.innerHTML = '';
             const redirectText = createHtmlElement('div', 'redirect-text', '', 'Thank you for the order. You will now be redirected to the store')
@@ -201,6 +201,15 @@ export function showModal(){
         }
     }
     )
+    window.addEventListener('click',(event)=>{
+        if(event.target && event.target instanceof HTMLElement && event.target.classList.contains('overlay')){
+            if(overlay){
+                overlay.innerHTML = "";
+                overlay.classList.remove('active');
+            } 
+
+        }
+    })
         return overlay.append(modalWindow);
     }
 }
