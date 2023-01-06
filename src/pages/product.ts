@@ -1,6 +1,7 @@
 import { mainContainer } from "../index";
 import { createHtmlElement } from "../components/createlement";
 import products from "../components/products";
+import { renderUI } from "../index";
 
 const sectionProduct = createHtmlElement('section', 'section-product-item');
 let productId: number;
@@ -8,18 +9,17 @@ const breadcrumbsContainer = createHtmlElement('div', 'breadcrumbs-container');
 const productItemCardContainer = createHtmlElement('div', 'product-item-card-container');
 
 function renderProductCard(productId: number){
+    sectionProduct.innerHTML = '';
     let keyOfProduct = productId - 1;
     addBreadCrumbs(productId);
     sectionProduct.append(breadcrumbsContainer);
     addProductItemCardContainer(productId);
     breadcrumbsContainer.after(productItemCardContainer);
-
-    
-
-   return sectionProduct;
+    return sectionProduct;
 }
 
 function addBreadCrumbs(productId: number){
+    breadcrumbsContainer.innerHTML = '';
     let keyOfProduct = productId - 1;
     const breadStoreText = createHtmlElement('a', 'bread-text bread-link', '', 'STORE');
     if(breadStoreText instanceof HTMLAnchorElement){
@@ -44,6 +44,7 @@ function addBreadCrumbs(productId: number){
 }
 
 function addProductItemCardContainer(productId: number){
+    productItemCardContainer.innerHTML = '';
     let keyOfProduct = productId - 1;
     const cardProductItemTitle = createHtmlElement('h2', 'card-product-item-title', '', `${products[keyOfProduct].title}`);
     productItemCardContainer.append(cardProductItemTitle);
@@ -52,7 +53,6 @@ function addProductItemCardContainer(productId: number){
     const imagesCardContainer = createHtmlElement('div', "imgs-card-container");
     cardImgPriceBtnContainer.append(imagesCardContainer);
     const imagesOfProduct = products[keyOfProduct].images;
-    console.log(imagesOfProduct);
     const imagesBox = createHtmlElement('div', 'imgs-card-box');
     imagesCardContainer.append(imagesBox);
     const mainImg = createHtmlElement('img', 'card-main-img');
@@ -71,19 +71,19 @@ function addProductItemCardContainer(productId: number){
             if(mainImg instanceof HTMLImageElement) mainImg.src = srcMain;
         })
     })
-    
     imagesBox.after(mainImg);
+    const cardProductPrice = createHtmlElement('div', 'card-product-price', '', `${products[keyOfProduct].price} $`)
     return productItemCardContainer;
 }
 
 export default function product(): void {
+    console.log(window.location.pathname);
+    const path = window.location.pathname;
+    let id = Number(path.split('/')[2]);
+
      if (mainContainer) {
         mainContainer.innerHTML = "";
-        if(localStorage.getItem('idOfProduct')) {
-            productId = JSON.parse(localStorage.getItem('idOfProduct')!);
-            renderProductCard(productId);
-        }
-
+        renderProductCard(id);
         return mainContainer.append(sectionProduct);
     } 
 }

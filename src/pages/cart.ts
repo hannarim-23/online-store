@@ -147,7 +147,6 @@ export function renderCart(cartObject: ObjectType){
             productCartTitle.append(linkCartProduct);
 
             if(linkCartProduct instanceof HTMLAnchorElement){
-                console.log('yes')
                 linkCartProduct.href = `/product`;
                 linkCartProduct.dataset.link = '';
                 /*linkCartProduct.addEventListener('click',(event: Event)=>{
@@ -272,7 +271,6 @@ function checkPromo(event: Event){
         btnPromoAdd.addEventListener('click', ()=>{
             promoActive[promoKey] = promoNumber;
             sumPromoNumber += promoNumber;
-            console.log(sumPromoNumber);
             renderPromo(promoActive);
             summaryTotalPrice.classList.add('active');
             changeTotalPriceWithPromo(sumPromoNumber);
@@ -343,7 +341,6 @@ function plus (id: string){
     if(count > stockProduct){
         return;
     }
-    console.log(cartObject);
     sumOfCartProduct = sumCartProduct(cartObject);
     totalPrice = sumTotalPrice(cartObject);
     if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;
@@ -361,7 +358,6 @@ function minus (id: string){
         return true;
     }
     cartObject[id] = cartObject[id] - 1;
-    console.log(cartObject);
     sumOfCartProduct = sumCartProduct(cartObject);
     totalPrice = sumTotalPrice(cartObject);
     if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;

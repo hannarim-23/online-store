@@ -65,11 +65,11 @@ body{
     color: gold;
   }
   
-  .shoppingСart{
+  .shoppingCart{
     position: relative;
     width: 50px;
   }
-  .shoppingСart img{
+  .shoppingCart img{
     width: 50px;
   }
   .cartCount{

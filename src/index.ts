@@ -8,6 +8,7 @@ export const mainContainer = document.querySelector('#main-container');
 export const overlay = document.querySelector('.overlay');
 let links = document.querySelectorAll('[data-link]'); /**/
 
+
 type Rout = {
 		path: string,
 	 	template: () => void,
@@ -17,11 +18,7 @@ const routes: Rout[] = [
 		path: '404',
 		template: error,		
 	},
-   {
-		path: '/',
-		template: main,
-	},
-   {
+    {
 		path: '/cart',
 		template: cart,
 	},
@@ -29,9 +26,66 @@ const routes: Rout[] = [
 		path: '/product',
 		template: product,
 	},
+	{
+		path: '/',
+		template: main,
+	},
 ];
 
-function router (event: Event|string) {
+function router(link: HTMLAnchorElement) {
+    const { href, id } = link;
+    localStorage.setItem('idOfProduct', id);
+    if (isNaN(Number(id))) {
+        history.pushState('', '', href);
+    } else {
+        history.pushState('', '', `${href}/${id}`);
+    }
+
+    window.dispatchEvent(new Event('popstate'));
+}
+
+document.addEventListener('click', (event: MouseEvent) => {
+    event.preventDefault();
+    if (event.target instanceof HTMLAnchorElement) {
+		
+        router(event.target);
+    }
+
+    const { parentElement } = event.target as HTMLLinkElement;
+
+    if (parentElement instanceof HTMLAnchorElement) {
+        router(parentElement);
+    }
+});
+const regex = /(http[s]?:\/\/)?([^\/\s]+\/)([^\/\s]+\/)(.*)/;
+const regex2 = /(\d+)*/;
+
+let m: RegExpExecArray|null;
+
+export const renderUI = () => {
+    let route = routes.find((route) => window.location.pathname.includes(route.path));
+	
+    if (route) {
+		const str = window.location.href;
+		if ((m = regex.exec(str)) !== null) {
+
+			if(!isNaN(Number(m[4]))){
+			   const path = window.location.pathname;
+			   let id = Number(path.split('/')[2]);
+
+			   routes[2].template();
+			}}else{
+                route.template();
+	        }
+    } else {
+        routes[0].template();
+    }
+};
+
+window.addEventListener('popstate', renderUI);
+
+window.addEventListener('DOMContentLoaded', renderUI);
+/*function router (event: Event|string) {
 	if(event instanceof Event){
 		event.preventDefault();
 	if (event.target instanceof HTMLAnchorElement) {
@@ -45,7 +99,7 @@ function router (event: Event|string) {
 		//window.dispatchEvent(new Event('popstate'));
 	}
 }
-	let route = routes.find(route => route.path == window.location.pathname);
+	let route = routes.find(route => route.path === window.location.pathname);
 	if (route) {
 		let html = (route.template)();
 		//window.dispatchEvent(new Event('popstate'));
@@ -57,17 +111,40 @@ document.addEventListener('click', (event: Event)=>{
          router(event);
 	}
 })
-
+//console.log('route.path', route!.path);
+	/*const str = window.location.href;
+	if ((m = regex.exec(str)) !== null) {
+		let s = regex2.exec(m[4]);
+		console.log("s", s);
+		if(regex2.exec(m[4])){
+			
+			const idOfProduct = Number(m[4]);
+		   console.log('idOfProduct', idOfProduct);
+		   console.log("m", m);
+		   //product();
+		}*/
 
 /*window.addEventListener('popstate', function() { 
-	let route = routes.find(route => route.path == window.location.pathname); 
+	if(mainContainer) mainContainer.innerHTML = '';
+	let route = routes.find(route => route.path === window.location.pathname); 
 	console.log(route);
 	if (route) {
+		if(mainContainer) mainContainer.innerHTML = '';
 		let html = (route.template)();
 	}
-});
-
-window.addEventListener('DOMContentLoaded', function() { 
+});*/
+/*const str = window.location.href;
+m = regex.exec(str)
+if(m) {
+	const pathN = m[3];
+route = routes.find((route) => pathN);
+console.log('route', route);
+}*/
+// The result can be accessed through the `m`-variable.
+//m.forEach((match, groupIndex) => {
+//	console.log(`Found match, group ${groupIndex}: ${match}`);
+//	});
+/*window.addEventListener('DOMContentLoaded', function() { 
 	let route = routes.find(route => route.path == window.location.pathname);//защита от обновлений
 	console.log(route);
 	if (route) {
@@ -75,30 +152,12 @@ window.addEventListener('DOMContentLoaded', function() {
 	}
 });*/
 
-/*const regex = /(http[s]?:\/\/)?([^\/\s]+\/)(.*)/;
 
 // Alternative syntax using RegExp constructor
 // const regex = new RegExp('(http[s]?:\\/\\/)?([^\\/\\s]+\\/)(.*)', '')
 
-const str = window.location.href;
-let m;
 
-if ((m = regex.exec(str)) !== null) {
-	console.log(m);
-	if(m[3] == 'product/'){
-       console.log('im here!!!!!!!!!!!!!!!!!!!');
-	   product();
-	}
-    // The result can be accessed through the `m`-variable.
-    m.forEach((match, groupIndex) => {
-        console.log(`Found match, group ${groupIndex}: ${match}`);
-    });
-}*/
-/*window.onpopstate = function (event) {  
-    var content = "";
-    if(event.state) {
-      content = event.state.plate;
-    }
-    changeMain(content);
-  }*/
+
+
+
 

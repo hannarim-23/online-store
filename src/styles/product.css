@@ -34,7 +34,9 @@
   }
   .card-img-item{
     width: 100px;
+    border: 1px solid #e6e6e6;
   }
   .card-main-img{
     width: 350px;
+    border: 1px solid #e6e6e6;
   }
