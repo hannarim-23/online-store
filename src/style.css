@@ -2,6 +2,7 @@
 @import "./styles/normalize.css";
 @import "./styles/cart.css";
 @import "./styles/modal.css";
+@import "./styles/product.css";
 
 body{
     color: white;

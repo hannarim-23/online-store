@@ -2,6 +2,7 @@ import { mainContainer } from "../index";
 import products from "../components/products";
 import { createHtmlElement } from "../components/createlement";
 import { showModal } from "../components/modal";
+import product from "./product";
 
 const cartCountElement = document.querySelector('.cartCount');
 const totalPriceElement = document.querySelector('.totalPrice');
@@ -12,14 +13,14 @@ type ObjectType = {
 }
 
 export let cartObject: ObjectType = {
-    '1': 1,
-    '27': 1,
-    '18': 1,
-    '57': 1,
-    '38': 2,
-    '81': 1,
-    '54': 1,
+    '9': 1,
+    '52': 1,
+    '63': 1,
+    '84': 1,
+    '25': 2,
+
 };
+
 
 //promocodes
 let promoObject: ObjectType = {
@@ -141,7 +142,20 @@ export function renderCart(cartObject: ObjectType){
             const imageCartItemContainer = createHtmlElement('div', 'image-cart-item-container');
             const productCartImageItem = createHtmlElement('img', 'product-cart-image-item');
             const productCartTextContainer = createHtmlElement('div', 'product-cart-text-container');
-            const productCartTitle = createHtmlElement('h2', 'product-cart-title', '', `${products[keyOfProduct].title}`);
+            const productCartTitle = createHtmlElement('h2', 'product-cart-title', '', );
+            const linkCartProduct = createHtmlElement('a', 'link-cart-product', `${key}`, `${products[keyOfProduct].title}`);
+            productCartTitle.append(linkCartProduct);
+
+            if(linkCartProduct instanceof HTMLAnchorElement){
+                console.log('yes')
+                linkCartProduct.href = `/product`;
+                linkCartProduct.dataset.link = '';
+                /*linkCartProduct.addEventListener('click',(event: Event)=>{
+                    event.preventDefault();
+                    history.pushState(null, '', `${linkCartProduct.href}`);
+                    product();
+                })*/
+            }
             const productCartDescription = createHtmlElement('p', 'product-cart-description', '', `${products[keyOfProduct].description}`);
             const productCartRating = createHtmlElement('p', 'product-cart-rating', '', `Rating: ${products[keyOfProduct].rating}`);
             const productCartCountContainer = createHtmlElement('div', 'product-cart-count-container');
@@ -368,7 +382,9 @@ function deleteProduct (id: string){
 
 function setLocalStorageCart(){
     localStorage.setItem('cart', JSON.stringify(cartObject));
-    localStorage.setItem('rows', JSON.stringify(rows));
+    if(rows !== undefined){
+        localStorage.setItem('rows', JSON.stringify(rows));
+    }
     localStorage.setItem('currentPage', JSON.stringify(currentPage));
 }
 window.addEventListener('beforeunload', setLocalStorageCart);
@@ -383,7 +399,7 @@ function getLocalStorage() {
             }
         }
         cartObject = JSON.parse(localStorage.getItem('cart') || '{}');
-        if(localStorage.getItem('rows')){
+        if(localStorage.getItem('rows') && localStorage.getItem('rows') !== undefined){
             rows = JSON.parse(localStorage.getItem('rows')!);
             if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement){
                 inputProductsOnPage.value = String(rows);
