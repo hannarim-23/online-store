@@ -1,8 +1,13 @@
 import { mainContainer } from "../index";
 import { createHtmlElement } from "../components/createlement";
 import products from "../components/products";
-import { renderUI } from "../index";
+import { sumCartProduct } from "./cart";
+import { sumTotalPrice } from "./cart";
+import { cartObject } from "./cart";
+import { showModal } from "../components/modal";
 
+const cartCountElement = document.querySelector('.cartCount');
+const totalPriceElement = document.querySelector('.totalPrice');
 const sectionProduct = createHtmlElement('section', 'section-product-item');
 let productId: number;
 const breadcrumbsContainer = createHtmlElement('div', 'breadcrumbs-container');
@@ -10,7 +15,6 @@ const productItemCardContainer = createHtmlElement('div', 'product-item-card-con
 
 function renderProductCard(productId: number){
     sectionProduct.innerHTML = '';
-    let keyOfProduct = productId - 1;
     addBreadCrumbs(productId);
     sectionProduct.append(breadcrumbsContainer);
     addProductItemCardContainer(productId);
@@ -48,8 +52,10 @@ function addProductItemCardContainer(productId: number){
     let keyOfProduct = productId - 1;
     const cardProductItemTitle = createHtmlElement('h2', 'card-product-item-title', '', `${products[keyOfProduct].title}`);
     productItemCardContainer.append(cardProductItemTitle);
+    const cardProductRating = createHtmlElement('p', 'card-product-rating', '', `Rating ${products[keyOfProduct].rating}`);
+    cardProductItemTitle.after(cardProductRating);
     const cardImgPriceBtnContainer = createHtmlElement('div', 'card-img-price-btn-container');
-    cardProductItemTitle.after(cardImgPriceBtnContainer);
+    cardProductRating.after(cardImgPriceBtnContainer);
     const imagesCardContainer = createHtmlElement('div', "imgs-card-container");
     cardImgPriceBtnContainer.append(imagesCardContainer);
     const imagesOfProduct = products[keyOfProduct].images;
@@ -72,18 +78,90 @@ function addProductItemCardContainer(productId: number){
         })
     })
     imagesBox.after(mainImg);
-    const cardProductPrice = createHtmlElement('div', 'card-product-price', '', `${products[keyOfProduct].price} $`)
+    const cardProductPrice = createHtmlElement('div', 'card-product-price', '', `${products[keyOfProduct].price} $`);
+    imagesCardContainer.after(cardProductPrice);
+    const cardBtnBox = createHtmlElement('div', 'card-btn-box');
+    cardProductPrice.after(cardBtnBox);
+    const btnAddToCart = createHtmlElement('button', 'card-btn-add-to-cart', `${products[keyOfProduct].id}`);
+    const id = btnAddToCart.id;
+    if(cartObject.hasOwnProperty(id)){
+        btnAddToCart.innerHTML = 'Drop From Cart';
+    }else{
+        btnAddToCart.innerHTML = 'Add To Cart';
+    }
+    btnAddToCart.addEventListener('click', ()=>{
+        const id = btnAddToCart.id;
+        if(cartObject.hasOwnProperty(id)){
+            delete cartObject[id];
+            if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+            if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+            btnAddToCart.innerHTML = 'Add To Cart';
+        }else{
+            cartObject[id] = 1;
+            if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+            if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+            btnAddToCart.innerHTML = 'Drop From Cart';
+        }
+    })
+    cardBtnBox.append(btnAddToCart);
+    const btnCardBuyNow = createHtmlElement('a', 'card-btn-buy-now', '', 'Buy Now');
+    btnAddToCart.after(btnCardBuyNow);
+    if(btnCardBuyNow instanceof HTMLAnchorElement){
+        btnCardBuyNow.href = '/cart';
+        btnCardBuyNow.dataset.link = `${products[keyOfProduct].id}`;
+        btnCardBuyNow.addEventListener('click', ()=>{
+            const id = btnAddToCart.id;
+            if(cartObject.hasOwnProperty(id)){
+                showModal();
+            }else{
+                cartObject[id] = 1;
+                showModal();
+                if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+                if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+            }
+        })
+    }
+    const descriptionContainer = createHtmlElement('div', 'card-description-container');
+    cardImgPriceBtnContainer.after(descriptionContainer);
+    const cardDescriptionTitle = createHtmlElement('div', 'card-description-title', '', 'Description');
+    descriptionContainer.append(cardDescriptionTitle);
+    const descriptionTitleText = createHtmlElement('div', 'card-description-text', '', `${products[keyOfProduct].description}`);
+    cardDescriptionTitle.after(descriptionTitleText);
+    const cardCategoryTitle = createHtmlElement('div', 'card-description-title', '', 'Category');
+    descriptionTitleText.after(cardCategoryTitle);
+    const categoryTitleText = createHtmlElement('div', 'card-description-text', '', `${products[keyOfProduct].category}`);
+    cardCategoryTitle.after(categoryTitleText);
+    const cardBrandTitle = createHtmlElement('div', 'card-description-title', '', 'Brand');
+    categoryTitleText.after(cardBrandTitle);
+    const brandTitleText = createHtmlElement('div', 'card-description-text', '', `${products[keyOfProduct].brand}`);
+    cardBrandTitle.after(brandTitleText);
+    const cardStockTitle = createHtmlElement('div', 'card-description-title', '', 'Stock');
+    brandTitleText.after(cardStockTitle);
+    const stockTitleText = createHtmlElement('div', 'card-description-text', '', `${products[keyOfProduct].stock}`);
+    cardStockTitle.after(stockTitleText);
     return productItemCardContainer;
 }
 
 export default function product(): void {
+    if (mainContainer) {
     console.log(window.location.pathname);
     const path = window.location.pathname;
     let id = Number(path.split('/')[2]);
-
-     if (mainContainer) {
+    let isId = 0;
+    products.forEach(product =>{
+        if(product.id === id){
+            isId += 1;
+        }
+    })
+     console.log(isId);
+     if(isId === 1){
         mainContainer.innerHTML = "";
         renderProductCard(id);
         return mainContainer.append(sectionProduct);
+    }else if(isId === 0){
+        mainContainer.innerHTML = "";
+        const productNoDiv = createHtmlElement('div', 'product-no-div', '', `Product number ${id} not found`);
+        return mainContainer.append(productNoDiv);
+    }
     } 
 }

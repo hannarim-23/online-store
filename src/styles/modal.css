@@ -115,6 +115,10 @@
     justify-content: center;
     gap: 10px;
   }
+  .modal-ccv-text,
+  .modal-valid-text{
+    color: #ffffff;
+  }
   .modal-input-valid,
   .modal-input-ccv{
     width: 80px;

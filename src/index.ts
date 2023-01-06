@@ -66,17 +66,7 @@ export const renderUI = () => {
     let route = routes.find((route) => window.location.pathname.includes(route.path));
 	
     if (route) {
-		const str = window.location.href;
-		if ((m = regex.exec(str)) !== null) {
-
-			if(!isNaN(Number(m[4]))){
-			   const path = window.location.pathname;
-			   let id = Number(path.split('/')[2]);
-
-			   routes[2].template();
-			}}else{
-                route.template();
-	        }
+        route.template();
     } else {
         routes[0].template();
     }
@@ -85,6 +75,15 @@ export const renderUI = () => {
 window.addEventListener('popstate', renderUI);
 
 window.addEventListener('DOMContentLoaded', renderUI);
+/*const str = window.location.href;
+		if ((m = regex.exec(str)) !== null) {
+
+			if(!isNaN(Number(m[4]))){
+			   const path = window.location.pathname;
+			   let id = Number(path.split('/')[2]);
+
+			   routes[2].template();
+			}}else{*/
 /*function router (event: Event|string) {
 	if(event instanceof Event){
 		event.preventDefault();

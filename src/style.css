@@ -5,8 +5,9 @@
 @import "./styles/product.css";
 
 body{
-    color: white;
-    background-color: green;/*цвет на замену, прото чтоб видеть данные*/
+    color: #000000;
+    background-color: #ffffff;/*цвет на замену, прото чтоб видеть данные*/
+    font-family: 'FuturaDemi', Arial, sans-serif;
   }
   .wrapper{
     max-width: 90%;

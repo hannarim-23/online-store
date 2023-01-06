@@ -3,14 +3,12 @@ import products from "../components/products";
 import { createHtmlElement } from "../components/createlement";
 import { showModal } from "../components/modal";
 import product from "./product";
+import { ObjectType } from "../components/objectTtype";
 
 const cartCountElement = document.querySelector('.cartCount');
 const totalPriceElement = document.querySelector('.totalPrice');
 const sectionCart = createHtmlElement('section', 'section-cart');
 
-type ObjectType = {
-    [key: string] : number
-}
 
 export let cartObject: ObjectType = {
     '9': 1,
@@ -21,9 +19,7 @@ export let cartObject: ObjectType = {
 
 };
 
-
-//promocodes
-let promoObject: ObjectType = {
+export let promoObject: ObjectType = {
     "HAPPYNY": 50,
     "RS": 10,
 }
@@ -38,7 +34,7 @@ function isEmpty(cartObject: ObjectType) {
     return true;
 }
 
-function sumCartProduct(cartObject: ObjectType): number{
+export function sumCartProduct(cartObject: ObjectType): number{
     let sum = 0;
     if(isEmpty(cartObject)){
        sum = 0;
@@ -51,7 +47,7 @@ function sumCartProduct(cartObject: ObjectType): number{
 let sumOfCartProduct = sumCartProduct(cartObject);
 if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;
 
-function sumTotalPrice(cartObject: ObjectType): number{
+export function sumTotalPrice(cartObject: ObjectType): number{
     let sum = 0;
     if(isEmpty(cartObject)){
        sum = 0;
