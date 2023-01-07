@@ -5,38 +5,36 @@ import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "
 import { getChecked } from "../components/filter";
 import { sorting } from "../components/btnFunc";
 
-
-var found:number = products.length;
-
-//delete localStorage.found;
+let found:number = products.length;
+let priceMas:string[] = [];
+let stockMas:string[] = [];
+localStorage.sortId;
+localStorage.details;//*** */
 
 export default function main(): void {
     if (mainContainer) {
         mainContainer.innerHTML = "";
         mainContainer.className = 'main-container';
-
-        const sideBar = createHtmlElement('div', 'side-Bar');
-        mainContainer.append(sideBar);
-        const mainPage = createHtmlElement('div', 'main-page');
-        sideBar.after(mainPage);
-
-        const categoryFilter = createHtmlElement('div', 'category-filter filter');
-        sideBar.append(categoryFilter);
-        const brandFilter = createHtmlElement('div', 'brand-filter filter');
-        categoryFilter.after(brandFilter);
-        const priceFilter = createHtmlElement('div', 'price-filter filter');
-        brandFilter.after(priceFilter);
-        const stockFilter = createHtmlElement('div', 'stock-filter filter');
-        priceFilter.after(stockFilter);
+          const sideBar = createHtmlElement('div', 'side-Bar');
+          mainContainer.append(sideBar);
+          const mainPage = createHtmlElement('div', 'main-page');
+          sideBar.after(mainPage);
+            const categoryFilter = createHtmlElement('div', 'category-filter filter');
+            sideBar.append(categoryFilter);
+            const brandFilter = createHtmlElement('div', 'brand-filter filter');
+            categoryFilter.after(brandFilter);
+            const priceFilter = createHtmlElement('div', 'price-filter filter');
+            brandFilter.after(priceFilter);
+            const stockFilter = createHtmlElement('div', 'stock-filter filter');
+            priceFilter.after(stockFilter);
 
 /*-----------------Category-----------------------*/
-        let checkedCategory: string[] = []; //checked values
+        let checkedCategory: string[] = [];
         const pCategory = createHtmlElement('p', 'p-style', '', 'Category');
         categoryFilter.append(pCategory);
         const containerCategory = createHtmlElement('div', 'container-сategory container');
         categoryFilter.after(containerCategory);
         let inputVarCategory = getCategory(products);
-//console.log('qwe', inputVarCategory);
         for (let i = 0; i < inputVarCategory.length; i += 1) {
             let input = createHtmlElement('input', 'input-line inputCategory', `var${[i]}`);
             input.setAttribute("type", "checkbox");
@@ -45,41 +43,26 @@ export default function main(): void {
             containerCategory.append(input);
             containerCategory.append(label);
             containerCategory.append(document.createElement('br'));
-/*
-            input.oninput = function(){
-                checkedCategory.push(label.innerText);
-                //console.log('checkedCategory=', checkedCategory);//
-                //getChecked(products, checkedCategory, checkedBrand);//fun
-                //getChecked(showProducts, products, checkedCategory, checkedBrand);
-                
-                found = getChecked(showProducts,products, checkedCategory, checkedBrand).length;
-                //console.log('found=', found);//
-                numOfFound.innerHTML = `Found: ${found}`;
-                //return checkedCategory;
-                if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-            } ;
-*/ //-----------------------------------++++++++++++++++++----------------
+
+//--------------------------------------------------
+
             input.addEventListener('change', (event) =>{
                 input.setAttribute('checked', 'checked');
                 checkedCategory.push(label.innerText);
-
-
-                found = getChecked(showProducts,products, checkedCategory, checkedBrand).length;
+                found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
                 numOfFound.innerHTML = `Found: ${found}`;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-                sorting(localStorage.sortId, getChecked(showProducts,products, checkedCategory, checkedBrand));
             });
         }
 
 /*-----------------Brand-----------------------*/
 
-        let checkedBrand: string[] = []; //checked values
+        let checkedBrand: string[] = [];
         const pBrand = createHtmlElement('p', 'p-style', '', 'Brand');
         brandFilter.append(pBrand);
         const containerBrand = createHtmlElement('div', 'container-brand container');
         brandFilter.after(containerBrand);
         let inputVarBrand = getBrands(products);
-//console.log('qwe', inputVarBrand);
         for (let i = 0; i < inputVarBrand.length; i += 1) {
             let input = createHtmlElement('input', 'input-line', `v${[i]}`);
             input.setAttribute("type", "checkbox");
@@ -92,12 +75,9 @@ export default function main(): void {
             input.oninput = function() {
                 checkedBrand.push(label.innerText);
                 
-                
-                
-                found = getChecked(showProducts, products, checkedCategory, checkedBrand).length;
+                found = getChecked(showProducts, products, checkedCategory, checkedBrand, priceMas, stockMas).length;
                 numOfFound.innerHTML = `Found: ${found}`;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-                sorting(localStorage.sortId, getChecked(showProducts,products, checkedCategory, checkedBrand));
             } ;
         }
 
@@ -105,109 +85,229 @@ export default function main(): void {
 
         const pPrice = createHtmlElement('p', 'p-style', '', 'Price');
         priceFilter.append(pPrice);
-        const priceContent = createHtmlElement('div', 'price-content');
+        const priceContent = createHtmlElement('div', 'price-content price-content1');
         priceFilter.append(priceContent);
-        let minPriceBox = createHtmlElement('input', 'input-box box-left');
-        priceContent.append(minPriceBox);
-        minPriceBox.setAttribute("value", `${minPrice(products)}`);
-        let maxPriceBox = createHtmlElement('input', 'input-box box-right');
-        priceContent.append(maxPriceBox);
-        maxPriceBox.setAttribute("value", `${maxPrice(products)}`);
-        const rangeBox = createHtmlElement('div', 'range-box');
+          let minPriceBox = createHtmlElement('input', 'input-box box-left');
+          minPriceBox.setAttribute("type", "number");
+          priceContent.append(minPriceBox);
+          minPriceBox.setAttribute("value", `${minPrice(products)}`);
+          let maxPriceBox = createHtmlElement('input', 'input-box box-right');
+          maxPriceBox.setAttribute("type", "number");
+          priceContent.append(maxPriceBox);
+          maxPriceBox.setAttribute("value", `${maxPrice(products)}`);
+
+        const rangeBox = createHtmlElement('div', 'range-box1 range-box', 'rangeBox');
         priceFilter.append(rangeBox);
+            const rangePrice1 = createHtmlElement('input', 'input-range', 'rangePrice1');
+            rangeBox.append(rangePrice1);
+              rangePrice1.setAttribute("type", "range"); 
+              rangePrice1.setAttribute("min", `${minPrice(products)}`);
+              rangePrice1.setAttribute("max", `${maxPrice(products)}`);
+              rangePrice1.setAttribute("step", "1");
+            const rangePrice2 = createHtmlElement('input', 'input-range', 'rangePrice2');
+            rangeBox.append(rangePrice2);
+              rangePrice2.setAttribute("type", "range");
+              rangePrice2.setAttribute("min", `${minPrice(products)}`);
+              rangePrice2.setAttribute("max", `${maxPrice(products)}`);
+              rangePrice2.setAttribute("step", "1");
+              let rangeBoxs = rangeBox.getElementsByTagName("input");
+              rangeBoxs[0].value = String(minPrice(products));
+              rangeBoxs[1].value = String(maxPrice(products));
 
-        const rangePrice1 = createHtmlElement('input', 'input-range');
-        rangeBox.append(rangePrice1);
-        rangePrice1.setAttribute("type", "range"); 
-        rangePrice1.setAttribute("value", "0");
-        rangePrice1.setAttribute("min", `${minPrice(products)}`);
-        rangePrice1.setAttribute("max", `${maxPrice(products)}`);
-        rangePrice1.setAttribute("step", "1");
+/*-----------------------------------------------*/
 
-        const rangePrice2 = createHtmlElement('input', 'input-range');
-        rangeBox.append(rangePrice2);
-        rangePrice2.setAttribute("type", "range");
-        rangePrice2.setAttribute("value", `${maxPrice(products)}`);
-        rangePrice2.setAttribute("min", `${minPrice(products)}`);
-        rangePrice2.setAttribute("max", `${maxPrice(products)}`);
-        rangePrice2.setAttribute("step", "1");
+        function getVals(){
+            let slides1 = rangeBox.getElementsByTagName("input");
+            let slide1 = parseFloat( slides1[0].value );
+            let slide2 = parseFloat( slides1[1].value );
+            if ( slide1 > slide2 ) { 
+                let a = slide2; slide2 = slide1; slide1 = a; 
+            }
+            let priceContents = priceContent.getElementsByTagName("input");
+            priceContents[0].value = String(slide1);
+            priceContents[1].value = String(slide2);
+        }
+        function setVals(){
+            let boxess1 = priceContent.getElementsByTagName("input");//тянет boxes перед вызовом функции
+            let box1 = parseFloat( boxess1[0].value );
+            let box2 = parseFloat( boxess1[1].value );
+            if ( box1 > box2 ) { 
+                let a = box2; box2 = box1; box1 = a; 
+            }
+            let rangeBoxs = rangeBox.getElementsByTagName("input");
+            rangeBoxs[0].value = String(box1);
+            rangeBoxs[1].value = String(box2);
+        }
+
+    let sliderSections1 = document.getElementsByClassName("range-box1");
+    let boxesSections1 = document.getElementsByClassName("price-content1");
+            let sliders1 = sliderSections1[0].getElementsByTagName("input");
+          for( let j = 0; j < sliders1.length; j++ ){
+            if( sliders1[j].type ==="range" ){
+              sliders1[j].oninput = getVals;
+            }
+          }
+            let boxes1 = boxesSections1[0].getElementsByTagName("input");
+          for( let j = 0; j < boxes1.length; j++ ){
+            if( boxes1[j].type ==="number" ){
+                boxes1[j].oninput = setVals;
+            }
+          }
+
+/*
+    priceFilter.oninput = function(event) {
+        priceMas = [];
+        priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
+        found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
+        numOfFound.innerHTML = `Found: ${found}`;
+        if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+    };
 
 /*----------------Stock--------------------*/
 
         const pStock = createHtmlElement('p', 'p-style', '', 'Stock');
         stockFilter.append(pStock);
-        const stockContent = createHtmlElement('div', 'price-content');
+        const stockContent = createHtmlElement('div', 'price-content price-content2');
         stockFilter.append(stockContent);
-        let minStockBox = createHtmlElement('input', 'input-box');
-        stockContent.append(minStockBox);
-        minStockBox.setAttribute("value", `${minStock(products)}`);
-        let maxStockBox = createHtmlElement('input', 'input-box');
-        stockContent.append(maxStockBox);
-        maxStockBox.setAttribute("value", `${maxStock(products)}`);
+          let minStockBox = createHtmlElement('input', 'input-box');
+          minStockBox.setAttribute("type", "number");
+          stockContent.append(minStockBox);
+          minStockBox.setAttribute("value", `${minStock(products)}`);
+          let maxStockBox = createHtmlElement('input', 'input-box');
+          maxStockBox.setAttribute("type", "number");
+          stockContent.append(maxStockBox);
+          maxStockBox.setAttribute("value", `${maxStock(products)}`);
+        const rangeBox2 = createHtmlElement('div', 'range-box2 range-box', 'rangeBox2');
+        stockFilter.append(rangeBox2);
+          const rangeStock = createHtmlElement('input', 'input-range');
+          rangeBox2.append(rangeStock);
+            rangeStock.setAttribute("type", "range"); 
+            rangeStock.setAttribute("value", "0");
+            rangeStock.setAttribute("min", `${minStock(products)}`);
+            rangeStock.setAttribute("max", `${maxStock(products)}`);
+            rangeStock.setAttribute("step", "1");
+          const rangeStock2 = createHtmlElement('input', 'input-range');
+          rangeBox2.append(rangeStock2);
+            rangeStock2.setAttribute("type", "range");
+            rangeStock2.setAttribute("value", `${maxStock(products)}`);
+            rangeStock2.setAttribute("min", `${minStock(products)}`);
+            rangeStock2.setAttribute("max", `${maxStock(products)}`);
+            rangeStock2.setAttribute("step", "1");
+            let rangeBoxs2 = rangeBox2.getElementsByTagName("input");
+            rangeBoxs2[0].value = String(minStock(products));
+            rangeBoxs2[1].value = String(maxStock(products));
 
-        const rangeStock = createHtmlElement('input', 'input-range');
-        stockFilter.append(rangeStock);
-        rangeStock.setAttribute("type", "range");
+        function getVals2(){
+            const slides2 = rangeBox2.getElementsByTagName("input");
+            let slide1 = parseFloat( slides2[0].value );
+            let slide2 = parseFloat( slides2[1].value );
+            if ( slide1 > slide2 ) { 
+                let a = slide2; slide2 = slide1; slide1 = a; 
+            }
+            let stockContents = stockContent.getElementsByTagName("input");
+            stockContents[0].value = String(slide1);
+            stockContents[1].value = String(slide2);
+        }
+        function setVals2(){
+            let boxess2 = stockContent.getElementsByTagName("input");//тянет boxes перед вызовом функции
+            let box1 = parseFloat( boxess2[0].value );
+            let box2 = parseFloat( boxess2[1].value );
+            if ( box1 > box2 ) {
+                let a = box2; box2 = box1; box1 = a; 
+            }
+            let rangeBoxs2 = rangeBox2.getElementsByTagName("input");
+            rangeBoxs2[0].value = String(box1);console.log('0= ', rangeBoxs2[0].value);
+            rangeBoxs2[1].value = String(box2);console.log('1= ', rangeBoxs2[1].value);
+        }
+
+    let sliderSections2 = document.getElementsByClassName("range-box2");
+    let boxesSections2 = document.getElementsByClassName("price-content2");
+        let sliders = sliderSections2[0].getElementsByTagName("input");
+          for( let j = 0; j < sliders.length; j++ ){
+            if( sliders[j].type ==="range" ){
+              sliders[j].oninput = getVals2;
+            }
+          }
+        let boxes2 = boxesSections2[0].getElementsByTagName("input");
+        for( let j = 0; j < boxes1.length; j++ ){
+          if( boxes2[j].type ==="number" ){
+              boxes2[j].oninput = setVals2;
+          }
+        }
+///*
+    //stockFilter.oninput = function(event) {
+    sideBar.oninput = function(event) {
+        stockMas = []; 
+        priceMas = [];
+            //stockContent[0].value = String(slide1);
+            //stockContents[1].value = String(slide2);
+        if ( rangeBoxs2[0] < rangeBoxs2[1] ) { 
+            stockMas.push(`${rangeBoxs2[1].value}`,`${rangeBoxs2[0].value}`);//!!!
+        } else stockMas.push(`${rangeBoxs2[0].value}`,`${rangeBoxs2[1].value}`);
+        console.log('000= ', stockMas);
+
+        priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
+        found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
+        numOfFound.innerHTML = `Found: ${found}`;
+        if (found == 0) {
+            showProducts.innerHTML = '';
+            showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+        }
+    };
 
 /*-----------------Sort-----------------------*/
-
         const sortContainer = createHtmlElement('div', 'sort-container');
         mainPage.append(sortContainer);
-
-        const sortBox = createHtmlElement('div', 'sort-box');
-        sortContainer.append(sortBox);
-        const btnSort = createHtmlElement('button', 'drop-btn btn', '', 'Sort'); /*btn sort + variants*/
-        sortBox.append(btnSort);
-        const menuSort = createHtmlElement('ul', 'dropdown-content');
-        sortBox.append(menuSort);
-        const sortABC = createHtmlElement('li', 'content', '', 'From A to Z');
-        menuSort.append(sortABC);
-        const sortCBA = createHtmlElement('li', 'content', '', 'From Z to A');
-        menuSort.append(sortCBA);
-        const sortMinMax = createHtmlElement('li', 'content', '', 'From min price to max');
-        menuSort.append(sortMinMax);
-        const sortMaxMin = createHtmlElement('li', 'content', '', 'From max price to min');
-        menuSort.append(sortMaxMin);
-        
-        const numOfFound = createHtmlElement('p', 'p-found', '', `Found: ${found}`);
-        sortContainer.append(numOfFound);
-
-        const viewSort = createHtmlElement('div', 'view-sort', '', '');/*view*/
-        sortContainer.append(viewSort);
-        const lineView = new Image();
-        lineView.src = '/src/assets/line.svg';
-        lineView.setAttribute("class", "view");
-        viewSort.append(lineView);
-        const blockView = new Image();
-        blockView.src = '/src/assets/block.svg';
-        blockView.setAttribute("class", "active view");
-        viewSort.append(blockView);
+          const sortBox = createHtmlElement('div', 'sort-box');
+          sortContainer.append(sortBox);
+            const btnSort = createHtmlElement('button', 'drop-btn btn', '', 'Sort'); /*btn sort + variants*/
+              sortBox.append(btnSort);
+              const menuSort = createHtmlElement('ul', 'dropdown-content');
+              sortBox.append(menuSort);
+              const sortABC = createHtmlElement('li', 'content', '', 'From A to Z');
+              menuSort.append(sortABC);
+              const sortCBA = createHtmlElement('li', 'content', '', 'From Z to A');
+              menuSort.append(sortCBA);
+              const sortMinMax = createHtmlElement('li', 'content', '', 'From min price to max');
+              menuSort.append(sortMinMax);
+              const sortMaxMin = createHtmlElement('li', 'content', '', 'From max price to min');
+              menuSort.append(sortMaxMin);
+          const numOfFound = createHtmlElement('p', 'p-found', '', `Found: ${found}`);
+          sortContainer.append(numOfFound);
+          const viewSort = createHtmlElement('div', 'view-sort', '', '');/*view*/
+          sortContainer.append(viewSort);
+            const lineView = new Image();
+            lineView.src = '/src/assets/line.svg';
+            lineView.setAttribute("class", "view");
+            viewSort.append(lineView);
+            const blockView = new Image();
+            blockView.src = '/src/assets/block.svg';
+            blockView.setAttribute("class", "active view");
+            viewSort.append(blockView);
 
 /*---------------Content-----------*/
 
         const showProducts = createHtmlElement('div', 'main-show block');
         mainPage.append(showProducts);
-
-        getChecked(showProducts, products, checkedCategory, checkedBrand);
+        priceMas = [String(minPrice(products)), String(maxPrice(products))];
+        stockMas = [String(minStock(products)), String(maxStock(products))];
+        getChecked(showProducts, products, checkedCategory, checkedBrand, priceMas, stockMas);
 
         let sortList = menuSort.children;
         for (let i = 0; i < sortList.length; i++){
             sortList[i].addEventListener("click", function() {
                 localStorage.sortId = i;
-                console.log ('localStorage.sortId=====', localStorage.sortId);
-                sorting(localStorage.sortId, getChecked(showProducts, products, checkedCategory, checkedBrand));
+                sorting(localStorage.sortId, getChecked(showProducts, products, checkedCategory, checkedBrand, priceMas, stockMas));
             });
         }
-//        console.log ('sorting', sortList);
 
-
-/*---------------btns lineView & blockView-----------*/
+/*---------------btns lineView & blockView-----------*///!!!!!!!!!!!!!!!
 
         let collectionItem = document.querySelectorAll('.item');
         let collectionPrice = document.querySelectorAll('.price');
         let collectionBtnItem = document.querySelectorAll('.btn-item');
         let collectionBtnBlock = document.querySelectorAll('.btn-Block');
-//localStorage.style =
+
         blockView.addEventListener("click", function() {
             blockView.setAttribute("class", "active view");
             lineView.setAttribute("class", "view");
@@ -246,50 +346,47 @@ export default function main(): void {
             });
         });
 
-/*---------------btns Add & Details-----------*/
+/*---------------btns Add & Details-----------*///!!!!!!!!!!!
+
+
+
+
+
+/*---------------SEARCH-----------*///!!!!!!!!!!!
 
 
 
 /*---------------btns copy + reset-----------*/
-
         const btnsCopyLink = createHtmlElement('div', 'copy-link-box');
         sideBar.prepend(btnsCopyLink);
+          const btnCopy = createHtmlElement('button', 'drop-btn btn', 'copyLink', 'Copy filter');
+          btnsCopyLink.append(btnCopy);
+          const btnReset = createHtmlElement('button', 'drop-btn btn', '', 'Reset filter');
+          btnsCopyLink.append(btnReset);
 
-        const btnCopy = createHtmlElement('button', 'drop-btn btn', '', 'Copy filter');
-        btnsCopyLink.append(btnCopy);
-        const btnReset = createHtmlElement('button', 'drop-btn btn', '', 'Reset filter');
-        btnsCopyLink.append(btnReset);
-
-
-//---------------------------------------------------
-        btnReset.addEventListener('click', () => {//!!!!!!!!!!!
-            checkedCategory.length = 0;
-            checkedBrand= [];
-
-
-
-            getChecked(showProducts, products, checkedCategory, checkedBrand);
+//--------------------RESET-------------------------------
+        btnReset.addEventListener('click', () => {
+            let c = document.getElementsByTagName("input");//обнуление чеков
+            for (let i = 0; i < c.length; i++){
+                c[i].checked = false;
+                c[i].removeAttribute('checked');
+            }
+            checkedCategory = [];
+            checkedBrand = [];
+            rangeBoxs[0].value = String(minPrice(products));
+            rangeBoxs[1].value = String(maxPrice(products));
+            rangeBoxs2[0].value = String(minStock(products));
+            rangeBoxs2[1].value = String(maxStock(products));
+            priceMas = [String(minPrice(products)), String(maxPrice(products))];
+            found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
+            numOfFound.innerHTML = `Found: ${found}`;
+            localStorage.sortId ='';
         });
 
-
-
-
-        
-/*
-        function resetFun(category: string[], brand: string[], Price?: string[], Stock?: string[]): void {
-            category.length = 0;
-            console.log('delet', category);
-            brand = [];
-          
-            getChecked(showProducts, products, category, brand);
-          }
-
-*/
-
-        //btnReset.addEventListener('click', resetFun());
-        /* => {
-            window.location.href = '../quiz/index.html';
+//--------------------COPY-------------------------------!!!!!!
+    btnCopy.addEventListener('click', () => {
+        let copyLink = document.location.href;
+        console.log('copyLink', copyLink);
         });
-*/
     } 
 }

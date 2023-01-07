@@ -37,7 +37,7 @@ body{
     border-radius: 30px;
     position: relative;
   }
-  input[type="text"]{
+  .search{
     border-radius:30px;
     width: calc(100% - 30px);
     height: 100%;

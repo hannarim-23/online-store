@@ -1,14 +1,11 @@
 import { IProduct } from "./interface";
 import { createItem } from "./createlement";
 import { sorting } from "./btnFunc";
-//import { createHtmlElement, createItem } from "./createlement";
-
 
 
 function getNumber(listChecked: string[]): string[] { //чекнутые нечетное колличесво раз
     let newMas:string[] = [...new Set(listChecked)];
     let arr:string[] = [];
-    //console.log('newMas......', newMas);//
 
     newMas.forEach(function (el, index) {
         let n = 0;
@@ -17,28 +14,28 @@ function getNumber(listChecked: string[]): string[] { //чекнутые неч�
         })
         if (n % 2 !== 0) arr.push(el);
     })
-    //console.log('arr', arr);//
+
     return arr;
 }
 
 
 
-/*+++++++++++++++++++++++*/
+/*+++++++++++++++++++++++
 function filterOneParametr<T>(arr: T[], arrCheck: any[], key: keyof T){
-    let result = arr.filter(elem => arrCheck.includes(elem[key]));
-    return result;
+    let result = arr.filter(elem => arrCheck.includes(elem[key][0].toUpperCase() + elem[key].slice(1).toLowerCase()));
 }
+*/
 
-
-export function getChecked(tagParent: HTMLElement , mas: IProduct[], category: string[], brand: string[], Price?: string[], Stock?: string[]): IProduct[] {
+export function getChecked(tagParent: HTMLElement , mas: IProduct[], category: string[], brand: string[], Price: string[], Stock: string[]): IProduct[] {
     let newcategory = getNumber(category); //console.log('000newcategory', newcategory);
-    let newbrand = getNumber(brand);//console.log('brand= ', brand);
+    let newbrand = getNumber(brand);//console.log('000brand= ', brand);
+    let pricemin = parseInt(Price[0]);
+    let pricemax = parseInt(Price[1]);
+    let stockemin = parseInt(Stock[0]);
+    let stockmax = parseInt(Stock[1]);
     let result;
 
-    //if(sorting)
     if (newcategory.length !== 0) {
-        //!   result = filterOneParametr<IProduct>(mas, newcategory, category);
-        //console.log('000newcategory', result);
         result = mas.filter(elem => newcategory.includes(elem.category[0].toUpperCase() + elem.category.slice(1).toLowerCase()));
     } else {
         result = mas;
@@ -48,15 +45,13 @@ export function getChecked(tagParent: HTMLElement , mas: IProduct[], category: s
         result = result.filter(elem => newbrand.includes(elem.brand[0].toUpperCase() + elem.brand.slice(1).toLowerCase()));
     }
 
+    result = result.filter(elem => (pricemin <= elem.price && elem.price <= pricemax));
+    result = result.filter(elem => (stockemin <= elem.stock && elem.stock <= stockmax));
 
-    
-    
-    
-    
     if (localStorage.sortId) result = sorting(localStorage.sortId, result);
     
     createItem (tagParent, result);
-    console.log('localStorage.sortId.......= ', localStorage.sortId);
+    //console.log('localStorage.sortId.......= ', localStorage.sortId);
 
     return result;
 }

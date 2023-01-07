@@ -53,57 +53,82 @@
   justify-content: space-around;
   margin-bottom: 5px;
   position: relative;
+  /*height: 50px;*/
+  width: 100%;
 }
-.input-box{
-    width: 50px;
+input[type="number"].input-box{
+    width: 60px;
     height: 30px;
     background-color: #e0f0ff;
+    border-radius:30px;
+    padding-left: 10px;
 }
+
 /*---------range----------*/
-
-/*
-@mixin range-slider($width, $height, $input-top, $input-bg-color, $input-thumb-color, $float:none, $input-height:20px, $input-border-radius:14px) {
-    position: relative;
-    width: $width;
-    height: $height;
-    float: $float;
-    text-align: center;
-      */
-    input[type="range"] {
-      width: 100%;
-      height: 25px;
-      background: red;
-      outline: none;
-      opacity: 0.7;
-      /*position: absolute;*/
-    }  
-    input[type="range"]:hover {
-        opacity: 1;
-    }
-
+.range-box{
+  position: relative;
+  width: 95%;
+  height: 25px;
+  opacity: 0.7;
+}
+.range-box:hover{
+  opacity: 1;
+}
+input[type="range"] {
+  pointer-events: none;
+  position: absolute;
+  border: none;
+  -webkit-appearance: none;
+  border-radius: 14px;
+  background: #1c7bf7;
+  left: 0;
+  width: 100%;
+  outline: none;
+  height: 10px;
+  margin: 5px ;
+  
+}
     
-    input[type="range"]::-webkit-slider-thumb { /*ползунок*/
-      -webkit-appearance: none;
-      /*pointer-events: all;*/
+input[type="range"]::-webkit-slider-thumb {
+      pointer-events: all;
       position: relative;
       z-index: 10;
       outline: 0;
-    }
-    input[type="range"]::-moz-range-thumb {
-      /*pointer-events: all;*/
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 14px;
+      background-color: #cc215a;
+}
+input[type="range"]::-moz-range-thumb {
+      pointer-events: all;
       position: relative;
       z-index: 10;
       -moz-appearance: none;
-    }
-  
-    
-    
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 14px;
+}
+input[type="range"]::-ms-thumb {
+      pointer-events: all;
+      position: relative;
+      z-index: 10;
+      -ms-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 14px;
+      border: 0;
+}
+  /*
     input[type=range]::-moz-range-track {
       position: relative;
       z-index: -1;
       background-color: rgba(0, 0, 0, 1);
       border: 0;
     }
+    
     input[type=range]:last-of-type::-moz-range-track {
       -moz-appearance: none;
       background: none transparent;
@@ -112,13 +137,10 @@
     
     input[type=range]::-moz-focus-outer {
       border: 0;
-    }/*
-  }
-  
-  section.range-slider {
-    @include range-slider(300px, 300px, 50px, #F1EFEF, #413F41, left);
-  }
+    }
   */
+
+
 /*--------btns copy + reset-----------*/
 
 .copy-link-box{

@@ -9,7 +9,6 @@ export function createHtmlElement (tagName: string, className: string, id?: stri
 }
 
 
-
 export function createItem (tagParent: HTMLElement , result: IProduct[]): void{
     tagParent.innerHTML = '';
 
