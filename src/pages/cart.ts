@@ -77,6 +77,7 @@ let summaryTotalPriceWithPromoBox = createHtmlElement('div', 'summary-total-pric
 let summaryTotalPriceWithPromo: HTMLElement;
 let promoInput: HTMLElement|undefined;
 let promoNumber: number = 0;
+let sumPromoNumber = 0;
 let promoContainer: HTMLElement;
 const promoActiveContainer = createHtmlElement('div', 'promo-active-container');
 const promoText = createHtmlElement('p', 'promo-text', '', 'Try to enter promo codes "HAPPYNY" , "RS" ');
@@ -119,8 +120,8 @@ export function renderCart(cartObject: ObjectType){
             url.searchParams.set('product', event.target.value);
             url.searchParams.set('page', String(currentPage));
             window.history.pushState({},'', url.href);
-        displayProduct(arrKey, rows, currentPage);
-        showPagination(arrKey, rows);
+            displayProduct(arrKey, rows, currentPage);
+            showPagination(arrKey, rows);
         }
     })
     function displayProduct(arrKey: string[], rowPerPage: number, page: number){
@@ -239,7 +240,7 @@ export function renderCart(cartObject: ObjectType){
 
 //add & delete promocode
 
-let sumPromoNumber = 0;
+
 
 function changeTotalPriceWithPromo(sumPromoNumber: number){
     summaryTotalPriceWithPromoBox.innerHTML = '';
@@ -371,10 +372,12 @@ function deleteProduct (id: string){
 
 function setLocalStorageCart(){
     localStorage.setItem('cart', JSON.stringify(cartObject));
-    if(rows !== undefined){
+    /*if(rows !== undefined){
         localStorage.setItem('rows', JSON.stringify(rows));
-    }
-    localStorage.setItem('currentPage', JSON.stringify(currentPage));
+    }*/
+    /*localStorage.setItem('currentPage', JSON.stringify(currentPage));*/
+    localStorage.setItem('promoActive', JSON.stringify(promoActive));
+    localStorage.setItem('sumPromoNumber', JSON.stringify(sumPromoNumber));
 }
 window.addEventListener('beforeunload', setLocalStorageCart);
 
@@ -388,7 +391,7 @@ function getLocalStorage() {
             }
         }
         cartObject = JSON.parse(localStorage.getItem('cart') || '{}');
-        if(localStorage.getItem('rows') && localStorage.getItem('rows') !== undefined){
+        /*if(localStorage.getItem('rows') && localStorage.getItem('rows') !== undefined){
             rows = JSON.parse(localStorage.getItem('rows')!);
             if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement){
                 inputProductsOnPage.value = String(rows);
@@ -398,8 +401,12 @@ function getLocalStorage() {
             if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement){
                 inputProductsOnPage.value = String(rows);
             }
+        }*/
+        if(localStorage.getItem('promoActive')){
+            promoActive = JSON.parse(localStorage.getItem('promoActive') || '{}');
+            sumPromoNumber = JSON.parse(localStorage.getItem('sumPromoNumber') || '0');
         }
-        currentPage = JSON.parse(localStorage.getItem('currentPage')!);
+        //currentPage = JSON.parse(localStorage.getItem('currentPage')!);
         
         sumOfCartProduct = sumCartProduct(cartObject);
         totalPrice = sumTotalPrice(cartObject);
@@ -422,6 +429,24 @@ export default function cart(): void {
     if(isEmpty(cartObject)){
         sectionCart.innerHTML = 'Cart is empty!'
     }else{
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        console.log('params', params);
+        if(params.hasOwnProperty('page')){
+            currentPage = Number(params.page);
+        }else{
+            currentPage = 1;
+        }
+        
+        if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement){
+            if(params.hasOwnProperty('product')){
+                rows = Number(params.product);
+                inputProductsOnPage.value = String(rows);
+            }else{
+                rows = 3;
+                inputProductsOnPage.value = String(rows);
+            }
+        }
         renderCart(cartObject);
     }
         return mainContainer.append(sectionCart);
