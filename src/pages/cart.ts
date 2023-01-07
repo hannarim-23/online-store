@@ -99,6 +99,7 @@ export function renderCart(cartObject: ObjectType){
     promoContainer = createHtmlElement('div', 'promo-container');
     const productsCount = createHtmlElement('p', 'products-count-summary', '', `Products : ${sumCartProduct(cartObject)}`);
     summaryTotalPrice = createHtmlElement('p', 'summary-total-price', '', `Total price: ${sumTotalPrice(cartObject)} $`);
+    const btnBuyContainer = createHtmlElement('div', 'btn-buy-now-container');
     const btnBuyNow = createHtmlElement('button', 'btn-buy-now', '', 'Buy Now');
     promoInput = createHtmlElement('input', 'promo-input', 'input-promocode');
     if(promoInput && promoInput instanceof HTMLInputElement){
@@ -145,11 +146,6 @@ export function renderCart(cartObject: ObjectType){
             if(linkCartProduct instanceof HTMLAnchorElement){
                 linkCartProduct.href = `/product`;
                 linkCartProduct.dataset.link = '';
-                /*linkCartProduct.addEventListener('click',(event: Event)=>{
-                    event.preventDefault();
-                    history.pushState(null, '', `${linkCartProduct.href}`);
-                    product();
-                })*/
             }
             const productCartDescription = createHtmlElement('p', 'product-cart-description', '', `${products[keyOfProduct].description}`);
             const productCartRating = createHtmlElement('p', 'product-cart-rating', '', `Rating: ${products[keyOfProduct].rating}`);
@@ -221,7 +217,8 @@ export function renderCart(cartObject: ObjectType){
     inputProductsOnPage.after(textPages);
     textPages.after(pagesBtnContainer);
     sectionCart.append(summaryCartContainer);
-    sectionCart.append(btnBuyNow);
+    sectionCart.append(btnBuyContainer);
+    btnBuyContainer.append(btnBuyNow);
     summaryCartContainer.append(productAndPriceContainer);
     productAndPriceContainer.append(productsCount);
     productAndPriceContainer.append(summaryTotalPrice);
