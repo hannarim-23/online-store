@@ -1,6 +1,6 @@
 import { mainContainer } from "../index";
 import { createHtmlElement } from "../components/createlement";
-import products from "../components/products";
+import { products } from "../components/products";
 import { sumCartProduct } from "./cart";
 import { sumTotalPrice } from "./cart";
 import { cartObject } from "./cart";

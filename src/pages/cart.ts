@@ -1,5 +1,5 @@
 import { mainContainer } from "../index";
-import products from "../components/products";
+import { products } from "../components/products";
 import { createHtmlElement } from "../components/createlement";
 import { showModal } from "../components/modal";
 import product from "./product";
