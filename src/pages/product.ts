@@ -6,8 +6,8 @@ import { sumTotalPrice } from "./cart";
 import { cartObject } from "./cart";
 import { showModal } from "../components/modal";
 
-const cartCountElement = document.querySelector('.cartCount');
-const totalPriceElement = document.querySelector('.totalPrice');
+export const cartCountElement = document.querySelector('.cartCount');
+export const totalPriceElement = document.querySelector('.totalPrice');
 const sectionProduct = createHtmlElement('section', 'section-product-item');
 let productId: number;
 const breadcrumbsContainer = createHtmlElement('div', 'breadcrumbs-container');

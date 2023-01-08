@@ -4,6 +4,11 @@ import { products } from "../components/products";
 import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "../components/firstValues";
 import { getChecked } from "../components/filter";
 import { sorting } from "../components/btnFunc";
+import { cartObject } from "./cart";
+import { sumCartProduct } from "./cart";
+import { sumTotalPrice } from "./cart";
+import { cartCountElement } from "./product";
+import { totalPriceElement } from "./product";
 
 let found:number = products.length;
 let priceMas: string[] = [String(minPrice(products)), String(maxPrice(products))];
@@ -47,11 +52,12 @@ export default function main(): void {
             containerCategory.append(document.createElement('br'));
 
 //--------------------------------------------------
-
-            input.addEventListener('change', (event) =>{
+            input.addEventListener('click', (event) =>{
                 checkedCategory.push(label.innerText);
+                input.setAttribute('checked', 'checked');
                 found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+                console.log('checkedCategory=', checkedCategory);
             });
         }
 
@@ -324,13 +330,30 @@ export default function main(): void {
 
 /*---------------btns Add & Details-----------*///!!!!!!!!!!!
 
-        let addBtns = document.querySelectorAll('.btn-item-add')
-        console.log('addBtns=', addBtns);
-        /*addBtns.addEventListener('click' () => {
-
-        /*})
-
-
+        let addBtns = document.querySelectorAll('.btn-item-add');
+        //console.log('addBtns=', addBtns);
+        document.addEventListener('click', (event)=>{
+          if(event.target && event.target instanceof HTMLElement){
+            if(event.target.classList.contains('btn-item-add')){
+              const productId = event.target.dataset.id;
+              console.log(productId);
+              if(productId !== undefined){
+                  if(!cartObject.hasOwnProperty(productId)){
+                    //console.log('i haven`t this product');
+                    cartObject[productId] = 1;
+                    if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+                    if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+                    event.target.innerHTML = 'Drop';
+                  }else if(cartObject.hasOwnProperty(productId)){
+                    //console.log('i have this product');
+                    delete cartObject[productId];
+                    if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+                    if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+                    event.target.innerHTML = 'Add';
+                  }
+            }
+          }
+        }})
 
 /*---------------SEARCH-----------*/
 

@@ -1,5 +1,6 @@
 
 import {IProduct} from "./interface";
+import { cartObject } from "../pages/cart";
 
 export function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{
     let element = document.createElement(tagName);
@@ -14,7 +15,7 @@ export function createItem (tagParent: HTMLElement , result: IProduct[]): void{
     tagParent.innerHTML = '';
 
     for (let i = 0; i < result.length; i += 1) {
-        let item = createHtmlElement('div', 'item item-block', `${result[i].id}`);
+        let item = createHtmlElement('div', 'item item-block');
         tagParent.append(item);
         let imgBox = createHtmlElement('div', 'img-box');
         item.append(imgBox);
@@ -31,9 +32,17 @@ export function createItem (tagParent: HTMLElement , result: IProduct[]): void{
         title.innerHTML = result[i].title;
         let btnBlock = createHtmlElement('div', 'btn-Block');
         contentBox.append(btnBlock);
-        let add = createHtmlElement('button', 'btn-item btn btn-item-add', ``, 'Add');
+        let add = createHtmlElement('button', 'btn-item btn btn-item-add');
+        add.dataset.id = `${result[i].id}`;
+            if(cartObject.hasOwnProperty(`${result[i].id}`)){
+                add.innerHTML = 'Drop';
+            }else{
+                add.innerHTML = 'Add';
+            }
         btnBlock.append(add);
-        let details = createHtmlElement('button', 'btn-item btn', '', 'Details');
+        let details = createHtmlElement('a', 'btn-item btn details', '', 'Details');
+        details.id = `${result[i].id}`;
+        if(details instanceof HTMLAnchorElement) details.href = '/product';
         btnBlock.append(details);
     }
 }
