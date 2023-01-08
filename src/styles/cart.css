@@ -213,6 +213,12 @@
   .input-products-on-page:hover{
     border: 2px solid #73a8ec;
   }
+  .no-product-in-cart{
+    margin-left: auto;
+    margin-right: auto;
+    color: #ea1653;
+    font-size: 40px;
+  }
 
   @media(max-width: 1120px){
 

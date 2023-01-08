@@ -10,14 +10,7 @@ const totalPriceElement = document.querySelector('.totalPrice');
 const sectionCart = createHtmlElement('section', 'section-cart');
 
 
-export let cartObject: ObjectType = {
-    '9': 1,
-    '52': 1,
-    '63': 1,
-    '84': 1,
-    '25': 2,
-
-};
+export let cartObject: ObjectType = {};
 
 export let promoObject: ObjectType = {
     "HAPPYNY": 50,
@@ -25,7 +18,7 @@ export let promoObject: ObjectType = {
 }
 
 //added promocodes
-let promoActive: ObjectType = {};
+export let promoActive: ObjectType = {};
 
 function isEmpty(cartObject: ObjectType) {
     for (let key in cartObject) {
@@ -77,7 +70,7 @@ let summaryTotalPriceWithPromoBox = createHtmlElement('div', 'summary-total-pric
 let summaryTotalPriceWithPromo: HTMLElement;
 let promoInput: HTMLElement|undefined;
 let promoNumber: number = 0;
-let sumPromoNumber = 0;
+export let sumPromoNumber = 0;
 let promoContainer: HTMLElement;
 const promoActiveContainer = createHtmlElement('div', 'promo-active-container');
 const promoText = createHtmlElement('p', 'promo-text', '', 'Try to enter promo codes "HAPPYNY" , "RS" ');
@@ -328,13 +321,13 @@ document.addEventListener('click', (event: MouseEvent)=>{
 })
 
 function plus (id: string){
-    cartObject[id] = cartObject[id] + 1;
     let keyOfProduct = Number(id) - 1;
     let count = cartObject[id];
     let stockProduct = products[keyOfProduct].stock;
-    if(count > stockProduct){
+    if(count === stockProduct){
         return;
     }
+    cartObject[id] = cartObject[id] + 1;
     sumOfCartProduct = sumCartProduct(cartObject);
     totalPrice = sumTotalPrice(cartObject);
     if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;
@@ -347,7 +340,13 @@ function minus (id: string){
         currentPage = 1;
         deleteProduct(id);
         if(isEmpty(cartObject)){
-            sectionCart.innerHTML = 'Cart is empty!'
+            if(!isEmpty(promoActive)){
+                Object.keys(promoActive).forEach(key => delete promoActive[key]);
+            }
+            sumPromoNumber = 0;
+            sectionCart.innerHTML = "";
+            const noProductInCart = createHtmlElement('div', 'no-product-in-cart', '', 'Cart is empty!');
+            sectionCart.append(noProductInCart); 
         }
         return true;
     }
@@ -372,10 +371,6 @@ function deleteProduct (id: string){
 
 function setLocalStorageCart(){
     localStorage.setItem('cart', JSON.stringify(cartObject));
-    /*if(rows !== undefined){
-        localStorage.setItem('rows', JSON.stringify(rows));
-    }*/
-    /*localStorage.setItem('currentPage', JSON.stringify(currentPage));*/
     localStorage.setItem('promoActive', JSON.stringify(promoActive));
     localStorage.setItem('sumPromoNumber', JSON.stringify(sumPromoNumber));
 }
@@ -391,29 +386,19 @@ function getLocalStorage() {
             }
         }
         cartObject = JSON.parse(localStorage.getItem('cart') || '{}');
-        /*if(localStorage.getItem('rows') && localStorage.getItem('rows') !== undefined){
-            rows = JSON.parse(localStorage.getItem('rows')!);
-            if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement){
-                inputProductsOnPage.value = String(rows);
-            }
-        }else{
-            rows = 3;
-            if(inputProductsOnPage && inputProductsOnPage instanceof HTMLInputElement){
-                inputProductsOnPage.value = String(rows);
-            }
-        }*/
+        
         if(localStorage.getItem('promoActive')){
             promoActive = JSON.parse(localStorage.getItem('promoActive') || '{}');
             sumPromoNumber = JSON.parse(localStorage.getItem('sumPromoNumber') || '0');
         }
-        //currentPage = JSON.parse(localStorage.getItem('currentPage')!);
-        
+       
         sumOfCartProduct = sumCartProduct(cartObject);
         totalPrice = sumTotalPrice(cartObject);
         if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;
         if(totalPriceElement) totalPriceElement.innerHTML = `${totalPrice} $`;
         if(isEmpty(cartObject)){
-            sectionCart.innerHTML = 'Cart is empty!';
+            //const noProductInCart = createHtmlElement('div', 'no-product-in-cart', '', 'Cart is empty!');
+            //sectionCart.append(noProductInCart); 
             return;
         }
         renderCart(cartObject);
@@ -427,7 +412,9 @@ export default function cart(): void {
     if (mainContainer) {
         mainContainer.innerHTML = "";
     if(isEmpty(cartObject)){
-        sectionCart.innerHTML = 'Cart is empty!'
+        sectionCart.innerHTML = "";
+        const noProductInCart = createHtmlElement('div', 'no-product-in-cart', '', 'Cart is empty!');
+        sectionCart.append(noProductInCart); 
     }else{
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
