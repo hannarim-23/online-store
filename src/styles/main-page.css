@@ -146,6 +146,17 @@ input[type="range"]::-ms-thumb {
 .copy-link-box{
     display: flex;
 }
+.copy-btn{
+  transition: background-color 0.5s ease;
+  animation-name: example;
+  animation-duration: 3s;
+}
+
+@keyframes example {
+  0%   {background-color:#4CAF50; }
+  50%  {background-color:#E62E6B; }
+  100% {background-color:#4CAF50;}
+}
 
 /*-------------------*/
 .sort-container{

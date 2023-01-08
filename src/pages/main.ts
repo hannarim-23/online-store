@@ -224,7 +224,7 @@ export default function main(): void {
               boxes2[j].oninput = setVals2;
           }
         }
-//!!!!
+
     sideBar.oninput = function(event) {
         stockMas = []; 
         priceMas = [];
@@ -324,34 +324,38 @@ export default function main(): void {
 
 /*---------------btns Add & Details-----------*///!!!!!!!!!!!
 
+        let addBtns = document.querySelectorAll('.btn-item-add')
+        console.log('addBtns=', addBtns);
+        /*addBtns.addEventListener('click' () => {
 
+        /*})
 
 
 
 /*---------------SEARCH-----------*/
 
-let searchBox = (<HTMLInputElement>document.getElementById("catalogSearch"));
+        let searchBox = (<HTMLInputElement>document.getElementById("catalogSearch"));
 
-let btnSearchDel = document.querySelector(".btnDel");
-btnSearchDel!.addEventListener('click', () => {
-    searchItem = searchBox.value ='';
-    found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
-    if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-});
-    //console.log('searchDel=', searchDel);
+        let btnSearchDel = document.querySelector(".btnDel");
+        btnSearchDel!.addEventListener('click', () => {
+            searchItem = searchBox.value ='';
+            found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+            if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+        });
+            //console.log('searchDel=', searchDel);
 
-searchBox.onkeyup = function(event) {
-    searchItem = searchBox.value;
-    found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
-    if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-};
+        searchBox.onkeyup = function(event) {
+            searchItem = searchBox.value;
+            found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+            if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+        };
 
 /*---------------btns copy + reset-----------*/
         const btnsCopyLink = createHtmlElement('div', 'copy-link-box');
         sideBar.prepend(btnsCopyLink);
           const btnCopy = createHtmlElement('button', 'drop-btn btn', 'copyLink', 'Copy filter');
           btnsCopyLink.append(btnCopy);
-          const btnReset = createHtmlElement('button', 'drop-btn btn', '', 'Reset filter');
+          const btnReset = createHtmlElement('button', 'drop-btn btn reset-btn', '', 'Reset filter');
           btnsCopyLink.append(btnReset);
 
 //--------------------RESET-------------------------------
@@ -373,20 +377,16 @@ searchBox.onkeyup = function(event) {
             localStorage.sortId ='';
             
         });
+        //console.log('localStorage.copyLink=', localStorage.copyLink);
+//--------------------COPY-------------------------------
+        btnCopy.addEventListener('click', () => {
+            let copy = document.location.href;
+            console.log('copyLink=', copy);
+            navigator.clipboard.writeText(document.location.href);
+            if (copy.length){
+                btnCopy.setAttribute("class", "drop-btn btn copy-btn");
+            }
 
-//--------------------COPY-------------------------------!!!!!!
-    btnCopy.addEventListener('click', () => {
-
-        let copyLink = document.location.href;
-        console.log('copyLink', copyLink);
-        copyLink.select();
-        document.execCommand("copy");
-
-        let btnVisited = btnsCopyLink.querySelector('copyLink');
-        console.log('btnsCopyLink', btnsCopyLink);
-        console.log('btnVisited', btnVisited);
-
-        //btnVisited[0].setAttribute('class', 'visited');
         });
     } 
 }

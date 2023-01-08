@@ -30,7 +30,7 @@ export function createItem (tagParent: HTMLElement , result: IProduct[]): void{
         title.innerHTML = result[i].title;
         let btnBlock = createHtmlElement('div', 'btn-Block');
         contentBox.append(btnBlock);
-        let add = createHtmlElement('button', 'btn-item btn', ``, 'Add');
+        let add = createHtmlElement('button', 'btn-item btn btn-item-add', ``, 'Add');
         btnBlock.append(add);
         let details = createHtmlElement('button', 'btn-item btn', '', 'Details');
         btnBlock.append(details);
