@@ -1,3 +1,4 @@
+
 import {IProduct} from "./interface";
 
 export function createHtmlElement (tagName: string, className: string, id?: string, innerText?: string):HTMLElement{

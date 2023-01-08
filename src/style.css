@@ -1,10 +1,17 @@
-/*@import "./styles/foo.scss";*/
-@import "./styles/normalize";
+
+/*@import "./foo.scss";*/
+@import "./styles/normalize.css";
+@import "./styles/cart.css";
+@import "./styles/modal.css";
+@import "./styles/product.css";
 @import "./styles/main-page";
 
 body{
-    color: white;
-    background-color: #e0f0ff;/*цвет на замену, прото чтоб видеть данные*/
+    color: #000000;
+    background-color: #ffffff;/*цвет на замену, прото чтоб видеть данные*/
+    font-family: 'FuturaDemi', Arial, sans-serif;
+    /*color: white;*/
+   /* background-color: #e0f0ff;*//*цвет на замену, прото чтоб видеть данные*/
   }
   .wrapper{
     max-width: 90%;
@@ -37,6 +44,7 @@ body{
     border-radius: 30px;
     position: relative;
   }
+
   .search{
     border-radius:30px;
     width: calc(100% - 30px);
@@ -64,14 +72,14 @@ body{
     color: gold;
   }
   
-  .shoppingСart{
+  .shoppingCart{
     position: relative;
     width: 50px;
   }
-  .shoppingСart img{
+  .shoppingCart img{
     width: 50px;
   }
-  .cartCaunt{
+  .cartCount{
     background: #E62E6B;
     position: absolute;
     top: 5px;
@@ -93,5 +101,7 @@ body{
   a:active{
     color:#E62E6B;
   }
+
+
 
 

@@ -1,0 +1,133 @@
+  .section-product-item{
+    background-color: #ffffff;
+    color: #000000;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .breadcrumbs-container{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  .bread-text{
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #000000;
+  }
+  .bread-link,
+  .bread-link:active,
+  .bread-link:visited{
+    color: #000000;
+    text-decoration: none;
+    transition: .5s;
+  }
+  .bread-link:hover{
+    color: #09287e;
+  }
+  .card-product-item-title{
+    font-size: 30px;
+    margin-top: 40px;
+  }
+  .card-img-price-btn-container{
+    display: flex;
+    padding-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ea1653;
+  }
+  .imgs-card-container{
+    display: flex;
+    gap: 100px;
+    align-items: center;
+  }
+  .imgs-card-box{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-img-item{
+    width: 100px;
+    border: 1px solid #e6e6e6;
+  }
+  .card-main-img{
+    width: 350px;
+    border: 1px solid #e6e6e6;
+    border-radius: 20px;
+  }
+  .card-product-price{
+    font-size: 40px;
+  }
+  .card-btn-box{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .card-btn-buy-now,
+  .card-btn-buy-now:visited{
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    color: #ffffff;
+  }
+  .card-btn-add-to-cart,
+  .card-btn-buy-now{
+    width: 130px;
+    border: 0;
+    border-radius: 5px;
+    background:  #EA1653;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 20px;
+    transition: .5s;
+  }
+  .card-btn-add-to-cart:hover,
+  .card-btn-buy-now:hover{
+    background:  #eb698e;
+  }
+  .card-description-container{
+    margin-top: 20px;
+  }
+  .card-description-title{
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  .card-description-text{
+    margin-bottom: 15px;
+  }
+  .product-no-div{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    color: #ea1653;
+  }
+
+  @media(max-width: 980px){
+
+    .imgs-card-container{
+      gap: 10px;
+    }
+
+  }
+
+  @media(max-width: 816px){
+
+    .imgs-card-box{
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .imgs-card-container{
+      flex-direction: column;
+    }
+    .card-img-price-btn-container{
+      flex-direction: column;
+    }
+    .card-btn-box{
+      flex-direction: row;
+    }
+    
+  }
