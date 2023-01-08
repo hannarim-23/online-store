@@ -1,21 +1,28 @@
+
 /*@import "./foo.scss";*/
 @import "./styles/normalize.css";
 @import "./styles/cart.css";
 @import "./styles/modal.css";
 @import "./styles/product.css";
+@import "./styles/main-page";
 
 body{
     color: #000000;
     background-color: #ffffff;/*цвет на замену, прото чтоб видеть данные*/
     font-family: 'FuturaDemi', Arial, sans-serif;
+    /*color: white;*/
+   /* background-color: #e0f0ff;*//*цвет на замену, прото чтоб видеть данные*/
   }
   .wrapper{
     max-width: 90%;
     margin: 0 auto;
   }
   .footer, .header{
-    height: 100px;
+    height: 90px;
     background-color: #1c7bf7;
+  }
+  .footer{
+    height: 70px;
   }
   .header-style, .footer-style{
     display: flex;
@@ -24,11 +31,8 @@ body{
     justify-content: space-around;
   }
   .main{
-    height: calc(100vh - 200px);
+    min-height: calc(100vh - 160px);
   }
-  
-  
-  
   .logoShop img{
     width: 200px;
   }
@@ -40,14 +44,16 @@ body{
     border-radius: 30px;
     position: relative;
   }
-  #catalogSearch input[type="text"]{
+
+  .search{
     border-radius:30px;
     width: calc(100% - 30px);
     height: 100%;
-    right: 0;
+    left: 0;
     position: absolute;
-    padding-left: 10px;
+    padding-left: 30px;
     opacity: .5;
+
   }
   .btnDel{
     position: absolute;
@@ -96,4 +102,6 @@ body{
     color:#E62E6B;
   }
 
-  
+
+
+

@@ -1,10 +1,392 @@
 import { mainContainer } from "../index";
+import { createHtmlElement } from "../components/createlement";
+import { products } from "../components/products";
+import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "../components/firstValues";
+import { getChecked } from "../components/filter";
+import { sorting } from "../components/btnFunc";
+
+let found:number = products.length;
+let priceMas: string[] = [String(minPrice(products)), String(maxPrice(products))];
+let stockMas: string[] = [String(minStock(products)), String(maxStock(products))];
+let searchItem: string = '';
+localStorage.sortId;
+localStorage.copyLink;
+localStorage.details;//*** */
 
 export default function main(): void {
     if (mainContainer) {
         mainContainer.innerHTML = "";
-        let p = document.createElement('p');
-        p.innerText = 'This is a main';
-        return mainContainer.append(p);
+        mainContainer.className = 'main-container';
+          const sideBar = createHtmlElement('div', 'side-Bar');
+          mainContainer.append(sideBar);
+          const mainPage = createHtmlElement('div', 'main-page');
+          sideBar.after(mainPage);
+            const categoryFilter = createHtmlElement('div', 'category-filter filter');
+            sideBar.append(categoryFilter);
+            const brandFilter = createHtmlElement('div', 'brand-filter filter');
+            categoryFilter.after(brandFilter);
+            const priceFilter = createHtmlElement('div', 'price-filter filter');
+            brandFilter.after(priceFilter);
+            const stockFilter = createHtmlElement('div', 'stock-filter filter');
+            priceFilter.after(stockFilter);
+
+/*-----------------Category-----------------------*/
+        let checkedCategory: string[] = [];
+        const pCategory = createHtmlElement('p', 'p-style', '', 'Category');
+        categoryFilter.append(pCategory);
+        const containerCategory = createHtmlElement('div', 'container-сategory container');
+        categoryFilter.after(containerCategory);
+        let inputVarCategory = getCategory(products);
+        for (let i = 0; i < inputVarCategory.length; i += 1) {
+            let input = createHtmlElement('input', 'input-line inputCategory', `var${[i]}`);
+            input.setAttribute("type", "checkbox");
+            let label = createHtmlElement('label', 'label-line ', '', inputVarCategory[i]);
+            label.setAttribute("for", `var${[i]}`);
+            containerCategory.append(input);
+            containerCategory.append(label);
+            containerCategory.append(document.createElement('br'));
+
+//--------------------------------------------------
+
+            input.addEventListener('change', (event) =>{
+                checkedCategory.push(label.innerText);
+                found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+                if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+            });
+        }
+
+/*-----------------Brand-----------------------*/
+
+        let checkedBrand: string[] = [];
+        const pBrand = createHtmlElement('p', 'p-style', '', 'Brand');
+        brandFilter.append(pBrand);
+        const containerBrand = createHtmlElement('div', 'container-brand container');
+        brandFilter.after(containerBrand);
+        let inputVarBrand = getBrands(products);
+        for (let i = 0; i < inputVarBrand.length; i += 1) {
+            let input = createHtmlElement('input', 'input-line', `v${[i]}`);
+            input.setAttribute("type", "checkbox");
+            let label = createHtmlElement('label', 'label-line', '', inputVarBrand[i]);
+            label.setAttribute("for", `v${[i]}`);
+            containerBrand.append(input);
+            containerBrand.append(label);
+            containerBrand.append(document.createElement('br'));
+//-----------------------------------++++++++++++++++++----------------
+
+            input.oninput = function() {
+                checkedBrand.push(label.innerText);
+                found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+                if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+            } ;
+        }
+
+/*-----------Price----------*/
+
+        const pPrice = createHtmlElement('p', 'p-style', '', 'Price');
+        priceFilter.append(pPrice);
+        const priceContent = createHtmlElement('div', 'price-content price-content1');
+        priceFilter.append(priceContent);
+          let minPriceBox = createHtmlElement('input', 'input-box box-left');
+          minPriceBox.setAttribute("type", "number");
+          priceContent.append(minPriceBox);
+          minPriceBox.setAttribute("value", `${minPrice(products)}`);
+          let maxPriceBox = createHtmlElement('input', 'input-box box-right');
+          maxPriceBox.setAttribute("type", "number");
+          priceContent.append(maxPriceBox);
+          maxPriceBox.setAttribute("value", `${maxPrice(products)}`);
+
+        const rangeBox = createHtmlElement('div', 'range-box1 range-box', 'rangeBox');
+        priceFilter.append(rangeBox);
+            const rangePrice1 = createHtmlElement('input', 'input-range', 'rangePrice1');
+            rangeBox.append(rangePrice1);
+              rangePrice1.setAttribute("type", "range"); 
+              rangePrice1.setAttribute("min", `${minPrice(products)}`);
+              rangePrice1.setAttribute("max", `${maxPrice(products)}`);
+              rangePrice1.setAttribute("step", "1");
+            const rangePrice2 = createHtmlElement('input', 'input-range', 'rangePrice2');
+            rangeBox.append(rangePrice2);
+              rangePrice2.setAttribute("type", "range");
+              rangePrice2.setAttribute("min", `${minPrice(products)}`);
+              rangePrice2.setAttribute("max", `${maxPrice(products)}`);
+              rangePrice2.setAttribute("step", "1");
+              let rangeBoxs = rangeBox.getElementsByTagName("input");
+              rangeBoxs[0].value = String(minPrice(products));
+              rangeBoxs[1].value = String(maxPrice(products));
+
+/*-----------------------------------------------*/
+
+        function getVals(){
+            let slides1 = rangeBox.getElementsByTagName("input");
+            let slide1 = parseFloat( slides1[0].value );
+            let slide2 = parseFloat( slides1[1].value );
+            if ( slide1 > slide2 ) { 
+                let a = slide2; slide2 = slide1; slide1 = a; 
+            }
+            let priceContents = priceContent.getElementsByTagName("input");
+            priceContents[0].value = String(slide1);
+            priceContents[1].value = String(slide2);
+        }
+        function setVals(){
+            let boxess1 = priceContent.getElementsByTagName("input");//тянет boxes перед вызовом функции
+            let box1 = parseFloat( boxess1[0].value );
+            let box2 = parseFloat( boxess1[1].value );
+            if ( box1 > box2 ) { 
+                let a = box2; box2 = box1; box1 = a; 
+            }
+            let rangeBoxs = rangeBox.getElementsByTagName("input");
+            rangeBoxs[0].value = String(box1);
+            rangeBoxs[1].value = String(box2);
+        }
+
+    let sliderSections1 = document.getElementsByClassName("range-box1");
+    let boxesSections1 = document.getElementsByClassName("price-content1");
+            let sliders1 = sliderSections1[0].getElementsByTagName("input");
+          for( let j = 0; j < sliders1.length; j++ ){
+            if( sliders1[j].type ==="range" ){
+              sliders1[j].oninput = getVals;
+            }
+          }
+            let boxes1 = boxesSections1[0].getElementsByTagName("input");
+          for( let j = 0; j < boxes1.length; j++ ){
+            if( boxes1[j].type ==="number" ){
+                boxes1[j].oninput = setVals;
+            }
+          }
+
+/*----------------Stock--------------------*/
+
+        const pStock = createHtmlElement('p', 'p-style', '', 'Stock');
+        stockFilter.append(pStock);
+        const stockContent = createHtmlElement('div', 'price-content price-content2');
+        stockFilter.append(stockContent);
+          let minStockBox = createHtmlElement('input', 'input-box');
+          minStockBox.setAttribute("type", "number");
+          stockContent.append(minStockBox);
+          minStockBox.setAttribute("value", `${minStock(products)}`);
+          let maxStockBox = createHtmlElement('input', 'input-box');
+          maxStockBox.setAttribute("type", "number");
+          stockContent.append(maxStockBox);
+          maxStockBox.setAttribute("value", `${maxStock(products)}`);
+        const rangeBox2 = createHtmlElement('div', 'range-box2 range-box', 'rangeBox2');
+        stockFilter.append(rangeBox2);
+          const rangeStock = createHtmlElement('input', 'input-range');
+          rangeBox2.append(rangeStock);
+            rangeStock.setAttribute("type", "range"); 
+            rangeStock.setAttribute("value", "0");
+            rangeStock.setAttribute("min", `${minStock(products)}`);
+            rangeStock.setAttribute("max", `${maxStock(products)}`);
+            rangeStock.setAttribute("step", "1");
+          const rangeStock2 = createHtmlElement('input', 'input-range');
+          rangeBox2.append(rangeStock2);
+            rangeStock2.setAttribute("type", "range");
+            rangeStock2.setAttribute("value", `${maxStock(products)}`);
+            rangeStock2.setAttribute("min", `${minStock(products)}`);
+            rangeStock2.setAttribute("max", `${maxStock(products)}`);
+            rangeStock2.setAttribute("step", "1");
+            let rangeBoxs2 = rangeBox2.getElementsByTagName("input");
+            rangeBoxs2[0].value = String(minStock(products));
+            rangeBoxs2[1].value = String(maxStock(products));
+
+        function getVals2(){
+            const slides2 = rangeBox2.getElementsByTagName("input");
+            let slide1 = parseFloat( slides2[0].value );
+            let slide2 = parseFloat( slides2[1].value );
+            if ( slide1 > slide2 ) { 
+                let a = slide2; slide2 = slide1; slide1 = a; 
+            }
+            let stockContents = stockContent.getElementsByTagName("input");
+            stockContents[0].value = String(slide1);
+            stockContents[1].value = String(slide2);
+        }
+        function setVals2(){
+            let boxess2 = stockContent.getElementsByTagName("input");//тянет boxes перед вызовом функции
+            let box1 = parseFloat( boxess2[0].value );
+            let box2 = parseFloat( boxess2[1].value );
+            if ( box1 > box2 ) {
+                let a = box2; box2 = box1; box1 = a; 
+            }
+            let rangeBoxs2 = rangeBox2.getElementsByTagName("input");
+            rangeBoxs2[0].value = String(box1);console.log('0= ', rangeBoxs2[0].value);
+            rangeBoxs2[1].value = String(box2);console.log('1= ', rangeBoxs2[1].value);
+        }
+
+    let sliderSections2 = document.getElementsByClassName("range-box2");
+    let boxesSections2 = document.getElementsByClassName("price-content2");
+        let sliders = sliderSections2[0].getElementsByTagName("input");
+          for( let j = 0; j < sliders.length; j++ ){
+            if( sliders[j].type ==="range" ){
+              sliders[j].oninput = getVals2;
+            }
+          }
+        let boxes2 = boxesSections2[0].getElementsByTagName("input");
+        for( let j = 0; j < boxes1.length; j++ ){
+          if( boxes2[j].type ==="number" ){
+              boxes2[j].oninput = setVals2;
+          }
+        }
+
+    sideBar.oninput = function(event) {
+        stockMas = []; 
+        priceMas = [];
+        stockMas.push(`${rangeBoxs2[0].value}`,`${rangeBoxs2[1].value}`);
+        priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
+        found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+        if (found == 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+    };
+/*-----------------Sort-----------------------*/
+        const sortContainer = createHtmlElement('div', 'sort-container');
+        mainPage.append(sortContainer);
+          const sortBox = createHtmlElement('div', 'sort-box');
+          sortContainer.append(sortBox);
+            const btnSort = createHtmlElement('button', 'drop-btn btn', '', 'Sort'); /*btn sort + variants*/
+              sortBox.append(btnSort);
+              const menuSort = createHtmlElement('ul', 'dropdown-content');
+              sortBox.append(menuSort);
+              const sortABC = createHtmlElement('li', 'content', '', 'From A to Z');
+              menuSort.append(sortABC);
+              const sortCBA = createHtmlElement('li', 'content', '', 'From Z to A');
+              menuSort.append(sortCBA);
+              const sortMinMax = createHtmlElement('li', 'content', '', 'From min price to max');
+              menuSort.append(sortMinMax);
+              const sortMaxMin = createHtmlElement('li', 'content', '', 'From max price to min');
+              menuSort.append(sortMaxMin);
+          const numOfFound = createHtmlElement('p', 'p-found', '', `Found: ${found}`);
+          sortContainer.append(numOfFound);
+          const viewSort = createHtmlElement('div', 'view-sort', '', '');/*view*/
+          sortContainer.append(viewSort);
+            const lineView = new Image();
+            lineView.src = '/src/assets/line.svg';
+            lineView.setAttribute("class", "view");
+            viewSort.append(lineView);
+            const blockView = new Image();
+            blockView.src = '/src/assets/block.svg';
+            blockView.setAttribute("class", "active view");
+            viewSort.append(blockView);
+
+/*---------------Content-----------*/
+
+        const showProducts = createHtmlElement('div', 'main-show block');
+        mainPage.append(showProducts);
+        getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem);
+
+        let sortList = menuSort.children;
+        for (let i = 0; i < sortList.length; i++){
+            sortList[i].addEventListener("click", function() {
+                localStorage.sortId = i;
+                sorting(localStorage.sortId, getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem));
+            });
+        }
+
+/*---------------btns lineView & blockView-----------*///!!!!!!!!!!!!!!!
+
+        let collectionItem = document.querySelectorAll('.item');
+        let collectionPrice = document.querySelectorAll('.price');
+        let collectionBtnItem = document.querySelectorAll('.btn-item');
+        let collectionBtnBlock = document.querySelectorAll('.btn-Block');
+
+        blockView.addEventListener("click", function() {
+            blockView.setAttribute("class", "active view");
+            lineView.setAttribute("class", "view");
+            showProducts.setAttribute("class", "main-show block");
+
+            collectionItem.forEach(function(elem) { 
+                elem.setAttribute("class", "item item-block");
+              });
+            collectionPrice.forEach(function(elem) { 
+                elem.setAttribute("class", "price price-block");
+              });
+              collectionBtnItem.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-item btn btn-item-block");
+            });
+            collectionBtnBlock.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-Block");
+            });
+        });
+
+        lineView.addEventListener("click", function() {
+            blockView.setAttribute("class", "view");
+            lineView.setAttribute("class", "active view");
+            showProducts.setAttribute("class", "main-show line");
+
+            collectionItem.forEach(function(elem) { 
+                elem.setAttribute("class", "item item-line");
+              });
+            collectionPrice.forEach(function(elem) { 
+                elem.setAttribute("class", "price price-line");
+              });
+            collectionBtnItem.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-item btn btn-item-line");
+            });
+            collectionBtnBlock.forEach(function(elem) { 
+                elem.setAttribute("class", "btn-Block btn-Block-line");
+            });
+        });
+
+/*---------------btns Add & Details-----------*///!!!!!!!!!!!
+
+        let addBtns = document.querySelectorAll('.btn-item-add')
+        console.log('addBtns=', addBtns);
+        /*addBtns.addEventListener('click' () => {
+
+        /*})
+
+
+
+/*---------------SEARCH-----------*/
+
+        let searchBox = (<HTMLInputElement>document.getElementById("catalogSearch"));
+
+        let btnSearchDel = document.querySelector(".btnDel");
+        btnSearchDel!.addEventListener('click', () => {
+            searchItem = searchBox.value ='';
+            found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+            if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+        });
+            //console.log('searchDel=', searchDel);
+
+        searchBox.onkeyup = function(event) {
+            searchItem = searchBox.value;
+            found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+            if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+        };
+
+/*---------------btns copy + reset-----------*/
+        const btnsCopyLink = createHtmlElement('div', 'copy-link-box');
+        sideBar.prepend(btnsCopyLink);
+          const btnCopy = createHtmlElement('button', 'drop-btn btn', 'copyLink', 'Copy filter');
+          btnsCopyLink.append(btnCopy);
+          const btnReset = createHtmlElement('button', 'drop-btn btn reset-btn', '', 'Reset filter');
+          btnsCopyLink.append(btnReset);
+
+//--------------------RESET-------------------------------
+        btnReset.addEventListener('click', () => {
+            let c = document.getElementsByTagName("input");//обнуление чеков
+            for (let i = 0; i < c.length; i++){
+                c[i].checked = false;
+            }
+            checkedCategory = [];
+            searchItem = searchBox.value ='';
+            checkedBrand = [];
+            rangeBoxs[0].value = String(minPrice(products));
+            rangeBoxs[1].value = String(maxPrice(products));
+            rangeBoxs2[0].value = String(minStock(products));
+            rangeBoxs2[1].value = String(maxStock(products));
+            stockMas = [String(minStock(products)), String(maxStock(products))];
+            priceMas = [String(minPrice(products)), String(maxPrice(products))];
+            found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+            localStorage.sortId ='';
+            
+        });
+        //console.log('localStorage.copyLink=', localStorage.copyLink);
+//--------------------COPY-------------------------------
+        btnCopy.addEventListener('click', () => {
+            let copy = document.location.href;
+            console.log('copyLink=', copy);
+            navigator.clipboard.writeText(document.location.href);
+            if (copy.length){
+                btnCopy.setAttribute("class", "drop-btn btn copy-btn");
+            }
+
+        });
     } 
 }

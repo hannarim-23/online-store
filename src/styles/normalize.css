@@ -15,7 +15,9 @@ html {
     -webkit-text-size-adjust: 100%;
     box-sizing: border-box; 
   }
-  h1, h2, h3, h4, body {
+
+  h1, h2, h3, h4, body, p {
+
     margin: 0em 0;
     padding: 0;
   }
@@ -65,10 +67,12 @@ html {
   input {
     outline: none;
     border: none;
+
   }
   input[type="text"] {
     font-family: inherit; 
     font-size: inherit; 
     line-height: inherit; 
     margin: 0; 
+
   }
