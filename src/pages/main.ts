@@ -6,9 +6,11 @@ import { getChecked } from "../components/filter";
 import { sorting } from "../components/btnFunc";
 
 let found:number = products.length;
-let priceMas:string[] = [];
-let stockMas:string[] = [];
+let priceMas: string[] = [String(minPrice(products)), String(maxPrice(products))];
+let stockMas: string[] = [String(minStock(products)), String(maxStock(products))];
+let searchItem: string = '';
 localStorage.sortId;
+localStorage.copyLink;
 localStorage.details;//*** */
 
 export default function main(): void {
@@ -47,10 +49,8 @@ export default function main(): void {
 //--------------------------------------------------
 
             input.addEventListener('change', (event) =>{
-                input.setAttribute('checked', 'checked');
                 checkedCategory.push(label.innerText);
-                found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
-                numOfFound.innerHTML = `Found: ${found}`;
+                found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
             });
         }
@@ -72,11 +72,10 @@ export default function main(): void {
             containerBrand.append(label);
             containerBrand.append(document.createElement('br'));
 //-----------------------------------++++++++++++++++++----------------
+
             input.oninput = function() {
                 checkedBrand.push(label.innerText);
-                
-                found = getChecked(showProducts, products, checkedCategory, checkedBrand, priceMas, stockMas).length;
-                numOfFound.innerHTML = `Found: ${found}`;
+                found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
             } ;
         }
@@ -154,15 +153,6 @@ export default function main(): void {
             }
           }
 
-/*
-    priceFilter.oninput = function(event) {
-        priceMas = [];
-        priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
-        found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
-        numOfFound.innerHTML = `Found: ${found}`;
-        if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-    };
-
 /*----------------Stock--------------------*/
 
         const pStock = createHtmlElement('p', 'p-style', '', 'Stock');
@@ -234,27 +224,15 @@ export default function main(): void {
               boxes2[j].oninput = setVals2;
           }
         }
-///*
-    //stockFilter.oninput = function(event) {
+//!!!!
     sideBar.oninput = function(event) {
         stockMas = []; 
         priceMas = [];
-            //stockContent[0].value = String(slide1);
-            //stockContents[1].value = String(slide2);
-        if ( rangeBoxs2[0] < rangeBoxs2[1] ) { 
-            stockMas.push(`${rangeBoxs2[1].value}`,`${rangeBoxs2[0].value}`);//!!!
-        } else stockMas.push(`${rangeBoxs2[0].value}`,`${rangeBoxs2[1].value}`);
-        console.log('000= ', stockMas);
-
+        stockMas.push(`${rangeBoxs2[0].value}`,`${rangeBoxs2[1].value}`);
         priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
-        found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
-        numOfFound.innerHTML = `Found: ${found}`;
-        if (found == 0) {
-            showProducts.innerHTML = '';
-            showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-        }
+        found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+        if (found == 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
     };
-
 /*-----------------Sort-----------------------*/
         const sortContainer = createHtmlElement('div', 'sort-container');
         mainPage.append(sortContainer);
@@ -289,15 +267,13 @@ export default function main(): void {
 
         const showProducts = createHtmlElement('div', 'main-show block');
         mainPage.append(showProducts);
-        priceMas = [String(minPrice(products)), String(maxPrice(products))];
-        stockMas = [String(minStock(products)), String(maxStock(products))];
-        getChecked(showProducts, products, checkedCategory, checkedBrand, priceMas, stockMas);
+        getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem);
 
         let sortList = menuSort.children;
         for (let i = 0; i < sortList.length; i++){
             sortList[i].addEventListener("click", function() {
                 localStorage.sortId = i;
-                sorting(localStorage.sortId, getChecked(showProducts, products, checkedCategory, checkedBrand, priceMas, stockMas));
+                sorting(localStorage.sortId, getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem));
             });
         }
 
@@ -352,9 +328,23 @@ export default function main(): void {
 
 
 
-/*---------------SEARCH-----------*///!!!!!!!!!!!
+/*---------------SEARCH-----------*/
 
+let searchBox = (<HTMLInputElement>document.getElementById("catalogSearch"));
 
+let btnSearchDel = document.querySelector(".btnDel");
+btnSearchDel!.addEventListener('click', () => {
+    searchItem = searchBox.value ='';
+    found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+    if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+});
+    //console.log('searchDel=', searchDel);
+
+searchBox.onkeyup = function(event) {
+    searchItem = searchBox.value;
+    found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+    if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+};
 
 /*---------------btns copy + reset-----------*/
         const btnsCopyLink = createHtmlElement('div', 'copy-link-box');
@@ -369,24 +359,34 @@ export default function main(): void {
             let c = document.getElementsByTagName("input");//обнуление чеков
             for (let i = 0; i < c.length; i++){
                 c[i].checked = false;
-                c[i].removeAttribute('checked');
             }
             checkedCategory = [];
+            searchItem = searchBox.value ='';
             checkedBrand = [];
             rangeBoxs[0].value = String(minPrice(products));
             rangeBoxs[1].value = String(maxPrice(products));
             rangeBoxs2[0].value = String(minStock(products));
             rangeBoxs2[1].value = String(maxStock(products));
+            stockMas = [String(minStock(products)), String(maxStock(products))];
             priceMas = [String(minPrice(products)), String(maxPrice(products))];
-            found = getChecked(showProducts,products, checkedCategory, checkedBrand, priceMas, stockMas).length;
-            numOfFound.innerHTML = `Found: ${found}`;
+            found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
             localStorage.sortId ='';
+            
         });
 
 //--------------------COPY-------------------------------!!!!!!
     btnCopy.addEventListener('click', () => {
+
         let copyLink = document.location.href;
         console.log('copyLink', copyLink);
+        copyLink.select();
+        document.execCommand("copy");
+
+        let btnVisited = btnsCopyLink.querySelector('copyLink');
+        console.log('btnsCopyLink', btnsCopyLink);
+        console.log('btnVisited', btnVisited);
+
+        //btnVisited[0].setAttribute('class', 'visited');
         });
     } 
 }

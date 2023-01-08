@@ -26,15 +26,27 @@ function filterOneParametr<T>(arr: T[], arrCheck: any[], key: keyof T){
 }
 */
 
-export function getChecked(tagParent: HTMLElement , mas: IProduct[], category: string[], brand: string[], Price: string[], Stock: string[]): IProduct[] {
+export function getChecked(tagParent: HTMLElement, Found: HTMLElement, mas: IProduct[], category: string[], brand: string[], Price: string[], Stock: string[], Search: string): IProduct[] {
     let newcategory = getNumber(category); //console.log('000newcategory', newcategory);
     let newbrand = getNumber(brand);//console.log('000brand= ', brand);
-    let pricemin = parseInt(Price[0]);
-    let pricemax = parseInt(Price[1]);
-    let stockemin = parseInt(Stock[0]);
-    let stockmax = parseInt(Stock[1]);
-    let result;
+    let stockemin: number, stockmax: number, pricemin: number, pricemax: number;
+    let result, search = Search;
 
+    if (parseInt(Stock[0]) > parseInt(Stock[1])) {
+        stockemin = parseInt(Stock[1]);
+        stockmax = parseInt(Stock[0]);
+    } else {
+        stockemin = parseInt(Stock[0]);
+        stockmax = parseInt(Stock[1]);
+    }
+    if (parseInt(Price[0]) > parseInt(Price[1])){
+        pricemin = parseInt(Price[1]);
+        pricemax = parseInt(Price[0]);
+    } else {
+        pricemin = parseInt(Price[0]);
+        pricemax = parseInt(Price[1]);
+    }
+    
     if (newcategory.length !== 0) {
         result = mas.filter(elem => newcategory.includes(elem.category[0].toUpperCase() + elem.category.slice(1).toLowerCase()));
     } else {
@@ -44,15 +56,31 @@ export function getChecked(tagParent: HTMLElement , mas: IProduct[], category: s
     if (newbrand.length !== 0) {
         result = result.filter(elem => newbrand.includes(elem.brand[0].toUpperCase() + elem.brand.slice(1).toLowerCase()));
     }
+    console.log('00000');
 
     result = result.filter(elem => (pricemin <= elem.price && elem.price <= pricemax));
     result = result.filter(elem => (stockemin <= elem.stock && elem.stock <= stockmax));
 
     if (localStorage.sortId) result = sorting(localStorage.sortId, result);
-    
-    createItem (tagParent, result);
-    //console.log('localStorage.sortId.......= ', localStorage.sortId);
+    console.log('search', search);
+    if (search.length !== 0) {
+        result = result.filter(elem => elem.brand.toLowerCase().includes(search.toLowerCase()) ||
+                                       elem.category.toLowerCase().includes(search.toLowerCase()) ||
+                                       elem.title.toLowerCase().includes(search.toLowerCase()) ||
+                                       elem.description.toLowerCase().includes(search.toLowerCase()) ||
+                                       elem.stock.toString().includes(search.toLowerCase()) ||
+                                       elem.rating.toString().includes(search.toLowerCase()) ||
+                                       elem.discountPercentage.toString().includes(search.toLowerCase()) ||
+                                       elem.price.toString().includes(search.toLowerCase()));
+    }
 
+    Found.innerHTML = `Found: ${result.length}`;
+
+//    if (result.length === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
+
+
+
+    createItem (tagParent, result);
     return result;
 }
 

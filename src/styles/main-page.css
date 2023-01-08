@@ -280,6 +280,9 @@ input[type="range"]::-ms-thumb {
   padding: 6px;
   font-size: 36px;
 }
+.visited{
+  background-color: #4CAF50;
+}
 
 /*------------btns lineView & blockView-------------*/
 .view-sort{

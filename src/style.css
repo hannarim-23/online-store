@@ -41,10 +41,11 @@ body{
     border-radius:30px;
     width: calc(100% - 30px);
     height: 100%;
-    right: 0;
+    left: 0;
     position: absolute;
-    padding-left: 10px;
+    padding-left: 30px;
     opacity: .5;
+
   }
   .btnDel{
     position: absolute;
