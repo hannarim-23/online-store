@@ -311,11 +311,13 @@ document.addEventListener('click', (event: MouseEvent)=>{
        const id = event.target.dataset.id;
        if(typeof id !== 'undefined') {
         plus(id);
+        localStorage.setItem('cart', JSON.stringify(cartObject));
        }
     }else if(event.target && event.target instanceof HTMLButtonElement && event.target.classList.contains('minus')){
         const id = event.target.dataset.id;
        if(typeof id !== 'undefined') {
         minus(id);
+        localStorage.setItem('cart', JSON.stringify(cartObject));
        }
     }
 })
@@ -364,6 +366,7 @@ function deleteProduct (id: string){
     totalPrice = sumTotalPrice(cartObject);
     if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;
     if(totalPriceElement) totalPriceElement.innerHTML = `${totalPrice} $`;
+    localStorage.setItem('cart', JSON.stringify(cartObject));
     renderCart(cartObject);
 }
 
@@ -397,8 +400,6 @@ function getLocalStorage() {
         if(cartCountElement) cartCountElement.innerHTML = `${sumOfCartProduct}`;
         if(totalPriceElement) totalPriceElement.innerHTML = `${totalPrice} $`;
         if(isEmpty(cartObject)){
-            //const noProductInCart = createHtmlElement('div', 'no-product-in-cart', '', 'Cart is empty!');
-            //sectionCart.append(noProductInCart); 
             return;
         }
         renderCart(cartObject);

@@ -96,11 +96,13 @@ function addProductItemCardContainer(productId: number){
             if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
             if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
             btnAddToCart.innerHTML = 'Add To Cart';
+            localStorage.setItem('cart', JSON.stringify(cartObject));
         }else{
             cartObject[id] = 1;
             if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
             if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
             btnAddToCart.innerHTML = 'Drop From Cart';
+            localStorage.setItem('cart', JSON.stringify(cartObject));
         }
     })
     cardBtnBox.append(btnAddToCart);
