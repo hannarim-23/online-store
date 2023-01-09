@@ -9,17 +9,21 @@ import { sumCartProduct } from "./cart";
 import { sumTotalPrice } from "./cart";
 import { cartCountElement } from "./product";
 import { totalPriceElement } from "./product";
+import { getNumber } from "../components/filter";
 
 let found:number = products.length;
 let priceMas: string[] = [String(minPrice(products)), String(maxPrice(products))];
 let stockMas: string[] = [String(minStock(products)), String(maxStock(products))];
 let searchItem: string = '';
+let view:string = 'block';
 localStorage.sortId;
 localStorage.copyLink;
 localStorage.details;//*** */
 
 export default function main(): void {
     if (mainContainer) {
+      let url = new URL(window.location.href);
+      
         mainContainer.innerHTML = "";
         mainContainer.className = 'main-container';
           const sideBar = createHtmlElement('div', 'side-Bar');
@@ -56,8 +60,20 @@ export default function main(): void {
                 checkedCategory.push(label.innerText);
                 input.setAttribute('checked', 'checked');
                 found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+                console.log('checkedCategory', getNumber(checkedCategory));
+                let strCategory = getNumber(checkedCategory).join(',');
+                console.log(strCategory);
+                url.searchParams.set('category', strCategory);
+                if(getNumber(checkedCategory).length === 0){
+                  url.searchParams.delete('category');
+                }
+                window.history.pushState({},'', url.href); 
+              console.log('checkedBrand',checkedBrand);
+              console.log('priceMas',priceMas);
+              console.log('stockMas',stockMas); 
+              console.log('searchItem',searchItem);
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-                console.log('checkedCategory=', checkedCategory);
+
             });
         }
 
@@ -79,12 +95,21 @@ export default function main(): void {
             containerBrand.append(document.createElement('br'));
 //-----------------------------------++++++++++++++++++----------------
 
-            input.oninput = function() {
+        input.addEventListener('click', (event) =>{
                 checkedBrand.push(label.innerText);
                 found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+                console.log('checkedBrand', getNumber(checkedBrand));
+                let strBrand = getNumber(checkedBrand).join(',');
+                console.log(strBrand);
+                url.searchParams.set('brand', strBrand);
+                if(getNumber(checkedBrand).length === 0){
+                  url.searchParams.delete('brand');
+                }
+                window.history.pushState({},'', url.href); 
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-            } ;
-        }
+            } 
+        )
+      }
 
 /*-----------Price----------*/
 
@@ -237,6 +262,11 @@ export default function main(): void {
         stockMas.push(`${rangeBoxs2[0].value}`,`${rangeBoxs2[1].value}`);
         priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
         found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+        const priceStr = priceMas.join('-');
+        const stockStr = stockMas.join('-');
+        url.searchParams.set('price', priceStr);
+        url.searchParams.set('stock', stockStr);
+        window.history.pushState({},'', url.href);
         if (found == 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
     };
 /*-----------------Sort-----------------------*/
@@ -279,7 +309,16 @@ export default function main(): void {
         for (let i = 0; i < sortList.length; i++){
             sortList[i].addEventListener("click", function() {
                 localStorage.sortId = i;
+                switch(i){ 
+                  case 0:btnSort.innerHTML = 'From A to Z'; break; 
+                  case 1:btnSort.innerHTML = 'From Z to A'; break; 
+                  case 2:btnSort.innerHTML = 'From min price to max'; break; 
+                  case 3:btnSort.innerHTML = 'From max price to min'; break; 
+                  default:btnSort.innerHTML = 'Sort'; break; 
+                }
                 sorting(localStorage.sortId, getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem));
+                url.searchParams.set('sort', localStorage.sortId);
+                window.history.pushState({},'', url.href);
             });
         }
 
@@ -291,6 +330,9 @@ export default function main(): void {
         let collectionBtnBlock = document.querySelectorAll('.btn-Block');
 
         blockView.addEventListener("click", function() {
+            view = 'block';
+            url.searchParams.set('view', view);
+            window.history.pushState({},'', url.href);
             blockView.setAttribute("class", "active view");
             lineView.setAttribute("class", "view");
             showProducts.setAttribute("class", "main-show block");
@@ -310,6 +352,9 @@ export default function main(): void {
         });
 
         lineView.addEventListener("click", function() {
+            view = 'line';
+            url.searchParams.set('view', view);
+            window.history.pushState({},'', url.href);
             blockView.setAttribute("class", "view");
             lineView.setAttribute("class", "active view");
             showProducts.setAttribute("class", "main-show line");
@@ -369,6 +414,11 @@ export default function main(): void {
 
         searchBox.onkeyup = function(event) {
             searchItem = searchBox.value;
+            url.searchParams.set('search', searchItem);
+            if(searchItem === ''){
+              url.searchParams.delete('search');
+            }
+            window.history.pushState({},'', url.href);
             found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
             if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
         };
@@ -390,6 +440,7 @@ export default function main(): void {
             checkedCategory = [];
             searchItem = searchBox.value ='';
             checkedBrand = [];
+            btnSort.innerHTML = 'Sort';
             rangeBoxs[0].value = String(minPrice(products));
             rangeBoxs[1].value = String(maxPrice(products));
             rangeBoxs2[0].value = String(minStock(products));
@@ -398,7 +449,33 @@ export default function main(): void {
             priceMas = [String(minPrice(products)), String(maxPrice(products))];
             found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
             localStorage.sortId ='';
-            
+            /*url.searchParams.forEach((value, key) =>{
+              console.log(key);
+              url.searchParams.delete(key);
+            })*/
+            if (url.searchParams.has('sort')) {
+              url.searchParams.delete('sort');
+            }
+            if (url.searchParams.has('price')) {
+              url.searchParams.delete('price');
+            }
+            if (url.searchParams.has('stock')) {
+              url.searchParams.delete('stock');
+            }
+            if (url.searchParams.has('brand')) {
+              url.searchParams.delete('brand');
+            }
+            if (url.searchParams.has('category')) {
+              url.searchParams.delete('category');
+            }
+            if (url.searchParams.has('search')) {
+              url.searchParams.delete('search');
+            }
+            if (url.searchParams.has('view')) {
+              url.searchParams.delete('view');
+            }
+            console.log('url.searchParams', url.searchParams.toString());
+              window.history.pushState({}, '', window.location.pathname);
         });
         //console.log('localStorage.copyLink=', localStorage.copyLink);
 //--------------------COPY-------------------------------
