@@ -121,25 +121,6 @@ input[type="range"]::-ms-thumb {
       border-radius: 14px;
       border: 0;
 }
-  /*
-    input[type=range]::-moz-range-track {
-      position: relative;
-      z-index: -1;
-      background-color: rgba(0, 0, 0, 1);
-      border: 0;
-    }
-    
-    input[type=range]:last-of-type::-moz-range-track {
-      -moz-appearance: none;
-      background: none transparent;
-      border: 0;
-    } 
-    
-    input[type=range]::-moz-focus-outer {
-      border: 0;
-    }
-  */
-
 
 /*--------btns copy + reset-----------*/
 
@@ -314,4 +295,46 @@ box-shadow:0 0 10px blue;
 }
 .view:hover {
   box-shadow:0 0 10px blue;
+}
+
+
+
+
+@media(max-width: 1050px){
+  .content-box {
+    height: 100px;
+  }
+  .item-line{
+    height: 300px;
+  }
+  .btn-item-line{
+    top: -10px;
+  }
+  .btn-Block-line{
+    top: -10px;
+  }
+  .title {
+    top: -35px;
+  }
+
+}
+@media(max-width: 670px){
+  
+  .main-container{
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+  .side-Bar{
+    width: 100%;
+   }
+  .main-page{
+    width: 100%;
+    margin-left: 0;
+  }
+  .item-block{
+    width: 300px;
+  }
+  .title {
+    top: -10px;
+  }
 }

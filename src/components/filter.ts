@@ -3,7 +3,7 @@ import { createItem } from "./createlement";
 import { sorting } from "./btnFunc";
 
 
-export function getNumber(listChecked: string[]): string[] { //чекнутые нечетное колличесво раз
+export function getNumber(listChecked: string[]): string[] {
     let newMas:string[] = [...new Set(listChecked)];
     let arr:string[] = [];
 
@@ -18,8 +18,6 @@ export function getNumber(listChecked: string[]): string[] { //чекнутые 
     return arr;
 }
 
-
-
 /*+++++++++++++++++++++++
 function filterOneParametr<T>(arr: T[], arrCheck: any[], key: keyof T){
     let result = arr.filter(elem => arrCheck.includes(elem[key][0].toUpperCase() + elem[key].slice(1).toLowerCase()));
@@ -27,8 +25,8 @@ function filterOneParametr<T>(arr: T[], arrCheck: any[], key: keyof T){
 */
 
 export function getChecked(tagParent: HTMLElement, Found: HTMLElement, mas: IProduct[], category: string[], brand: string[], Price: string[], Stock: string[], Search: string): IProduct[] {
-    let newcategory = getNumber(category); //console.log('000newcategory', newcategory);
-    let newbrand = getNumber(brand);//console.log('000brand= ', brand);
+    let newcategory = getNumber(category);
+    let newbrand = getNumber(brand);
     let stockemin: number, stockmax: number, pricemin: number, pricemax: number;
     let result, search = Search;
 
@@ -73,14 +71,18 @@ export function getChecked(tagParent: HTMLElement, Found: HTMLElement, mas: IPro
                                        elem.discountPercentage.toString().includes(search.toLowerCase()) ||
                                        elem.price.toString().includes(search.toLowerCase()));
     }
-
     Found.innerHTML = `Found: ${result.length}`;
-
-//    if (result.length === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-
-
-
     createItem (tagParent, result);
     return result;
 }
 
+export function setChecked(nodeCollection: HTMLElement, urlMas:string[]){
+    let masInput = nodeCollection.getElementsByTagName('input');
+    let masLabel = nodeCollection.getElementsByTagName('label');
+    for (let i = 0; i < masLabel.length; i++){
+      for (let j = 0; j < urlMas.length; j++){
+        if (masLabel[i].innerHTML == urlMas[j]) 
+        masInput[i].setAttribute("checked", "checked");
+      }
+    }
+}

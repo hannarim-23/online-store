@@ -2,7 +2,7 @@ import { mainContainer } from "../index";
 import { createHtmlElement } from "../components/createlement";
 import { products } from "../components/products";
 import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "../components/firstValues";
-import { getChecked, getNumber } from "../components/filter";
+import { getChecked, getNumber, setChecked } from "../components/filter";
 import { sorting } from "../components/btnFunc";
 import { cartObject } from "./cart";
 import { sumCartProduct } from "./cart";
@@ -16,19 +16,7 @@ let stockMas: string[] = [String(minStock(products)), String(maxStock(products))
 let searchItem: string = '';
 localStorage.sortId;
 localStorage.copyLink;
-export let view:string; //= 'block';
-
-/* может понадобиться, при создании фильтра из юрл, обнулить все :checked
-//а может и не понадобится
-let checked = document.querySelectorAll('input[type="checkbox"]:checked');
-//console.log('+++++++++++', checked)
-  if (checked ) {
-    //console.log('---------', checked);
-    checked.forEach(el => { el.removeAttribute('checked');
-    //console.log('999', el); 
-  });
-  }
-*/
+export let view: string; //= 'block';
 
 export default function main(): void {
     if (mainContainer) {
@@ -68,21 +56,11 @@ export default function main(): void {
 
 //--------------------------------------------------
           if(url.searchParams.has('category')){
-           let category = url.searchParams.get('category')!;
-           checkedCategory = category.split(',');
-           console.log('category', checkedCategory);
-           let mas = containerCategory.children;// getElementsByTagName('input, label'); 
-
-           let masInput = containerCategory.getElementsByTagName('input'); 
-           let masLabel = containerCategory.getElementsByTagName('label'); 
-           for (let i = 0; i < masLabel.length; i++){ 
-              for (let j = 0; j < checkedCategory.length; j++){ 
-                if (masLabel[i].innerHTML == checkedCategory[j])  
-                  masInput[i].setAttribute("checked", "checked"); 
-              } 
-            }
+            let category = url.searchParams.get('category')!;
+            checkedCategory = category.split(',');
+           setChecked(containerCategory, checkedCategory);
           }
-           
+          
         input.addEventListener('change', (event) => {
         //  input.addEventListener('click', (event) =>{
                 checkedCategory.push(label.innerText);
@@ -96,11 +74,7 @@ export default function main(): void {
                 if(getNumber(checkedCategory).length === 0){
                   url.searchParams.delete('category');
                 }
-                window.history.pushState({},'', url.href); /*
-              console.log('checkedBrand',checkedBrand);
-              console.log('priceMas',priceMas);
-              console.log('stockMas',stockMas); 
-              console.log('searchItem',searchItem);*/
+                window.history.pushState({},'', url.href);
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
             //return true
               });
@@ -126,17 +100,7 @@ export default function main(): void {
         if(url.searchParams.has('brand')){
            let brand = url.searchParams.get('brand')!;
            checkedBrand = brand.split(',');
-           console.log('category', checkedCategory);
-           let mas = containerBrand.children;// getElementsByTagName('input, label'); 
-
-           let masInput = containerBrand.getElementsByTagName('input'); 
-           let masLabel = containerBrand.getElementsByTagName('label'); 
-           for (let i = 0; i < masLabel.length; i++){ 
-              for (let j = 0; j < checkedBrand.length; j++){ 
-                if (masLabel[i].innerHTML == checkedBrand[j])  
-                  masInput[i].setAttribute("checked", "checked"); 
-              } 
-            }
+           setChecked(containerCategory, checkedBrand);
           }
         input.addEventListener('click', (event) =>{
                 checkedBrand.push(label.innerText);
@@ -338,11 +302,11 @@ export default function main(): void {
           const viewSort = createHtmlElement('div', 'view-sort', '', '');/*view*/
           sortContainer.append(viewSort);
             const lineView = new Image();
-            lineView.src = '/src/assets/line.svg';
+            lineView.src = '/img/line.svg';
             lineView.setAttribute("class", "view");
             viewSort.append(lineView);
             const blockView = new Image();
-            blockView.src = '/src/assets/block.svg';
+            blockView.src = '/img/block.svg';
             blockView.setAttribute("class", "active view");
             viewSort.append(blockView);
 
@@ -403,7 +367,7 @@ export default function main(): void {
             });
         }
 
-/*---------------btns lineView & blockView-----------*///!!!!!!!!!!!!!!!
+/*---------------btns lineView & blockView-----------*/
         if(url.searchParams.has('view')){
             view = url.searchParams.get('view')!;
             if(view === 'block'){
@@ -443,7 +407,7 @@ export default function main(): void {
             getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem)
         });
 
-/*---------------btns Add & Details-----------*///!!!!!!!!!!!
+/*---------------btns Add & Details-----------*/
 
         let addBtns = document.querySelectorAll('.btn-item-add');
 

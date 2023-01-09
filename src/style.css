@@ -1,5 +1,3 @@
-
-/*@import "./foo.scss";*/
 @import "./styles/normalize.css";
 @import "./styles/cart.css";
 @import "./styles/modal.css";
@@ -9,10 +7,8 @@
 
 body{
     color: #000000;
-    background-color: #ffffff;/*цвет на замену, прото чтоб видеть данные*/
+    background-color: #ffffff;
     font-family: 'FuturaDemi', Arial, sans-serif;
-    /*color: white;*/
-   /* background-color: #e0f0ff;*//*цвет на замену, прото чтоб видеть данные*/
   }
   .wrapper{
     max-width: 90%;
@@ -105,4 +101,42 @@ body{
 
 
 
+
+  @media(max-width: 750px){
+    .logoShop img{
+      width: 100px;
+    }
+    .footer, .header{
+      height: 70px;
+    }
+    .search_containerInpur{
+      width: 150px;
+      height: 20px;
+    }
+    .search{
+      border-radius:30px;
+      width: calc(100% - 20px);
+      padding-left: 10px;
+    }
+    .btnDel{
+      width: 20px;
+      height: 20px;
+    }
+    .header-style span{
+      font-size: 14px;
+      display: block;
+      padding: 0 5px;
+      text-align: center;
+    }
+    .shoppingCart{
+      width: 30px;
+    }
+    .shoppingCart img{
+      width: 30px;
+    }
+    .totalPrice{
+      display: block;
+    text-align: center;
+    }
+  }
 
