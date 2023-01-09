@@ -31,7 +31,7 @@
   }
   .personal-data-window{
     display: flex;
-    gap: 20;
+    gap: 20px;
     flex-direction: column;
     align-items: center;
   }
