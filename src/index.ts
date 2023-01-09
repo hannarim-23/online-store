@@ -67,11 +67,11 @@ export const renderUI = () => {
 	let url = window.location.pathname;
 
     //let route = routes.find((route) => window.location.pathname.includes(route.path));
-	if(url === '/cart'){
+	if(url === '/cart' || url === '/cart/'){
 		routes[1].template();
 	}else if(url.includes('/product')){
 		routes[2].template();
-	}else if(url === '/'){
+	}else if(url === '/' || url === '//'){
 		routes[3].template();
 	}else{
 		routes[0].template();

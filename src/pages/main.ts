@@ -100,7 +100,7 @@ export default function main(): void {
         if(url.searchParams.has('brand')){
            let brand = url.searchParams.get('brand')!;
            checkedBrand = brand.split(',');
-           setChecked(containerCategory, checkedBrand);
+           setChecked(containerBrand, checkedBrand);
           }
         input.addEventListener('click', (event) =>{
                 checkedBrand.push(label.innerText);
@@ -517,7 +517,8 @@ export default function main(): void {
               url.searchParams.delete('view');
             }
             console.log('url.searchParams', url.searchParams.toString());
-              window.history.pushState({}, '', window.location.pathname);
+            window.history.pushState({}, '', '/');
+            //  window.history.pushState({}, '', window.location.pathname);
         });
 
 //--------------------COPY-------------------------------

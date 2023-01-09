@@ -21,6 +21,7 @@
     z-index: 10;
     background-color: #1c7bf7;
     border: 3px solid #6ca7f3;
+    color: #ffffff; 
     border-radius: 20px;
     flex-direction: column;
     gap: 20px;
@@ -30,7 +31,7 @@
   }
   .personal-data-window{
     display: flex;
-    gap: 5px;/*20*/
+    gap: 20;
     flex-direction: column;
     align-items: center;
   }
@@ -147,7 +148,22 @@
     }
 
   }
+  @media(max-height: 930px){
 
+    .modal-window{
+      height: 90%;
+    }
+    .personal-data-window{
+      gap: 5px;
+    }
+
+  }
+  @media(max-height: 720px){
+
+    .modal-window{
+      gap: 5px;
+    }
+  }
   @media(max-width: 720px){
 
     .modal-window{
