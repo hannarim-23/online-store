@@ -3,7 +3,7 @@ import { createItem } from "./createlement";
 import { sorting } from "./btnFunc";
 
 
-function getNumber(listChecked: string[]): string[] { //чекнутые нечетное колличесво раз
+export function getNumber(listChecked: string[]): string[] { //чекнутые нечетное колличесво раз
     let newMas:string[] = [...new Set(listChecked)];
     let arr:string[] = [];
 

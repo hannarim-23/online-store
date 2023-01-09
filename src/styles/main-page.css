@@ -19,7 +19,7 @@
 }
 .drop-btn {
     margin: 10px 10px;
-    width: 100px;
+    width: 140px;
   }
   .btn {
     background-color: #cc215a;
@@ -57,7 +57,7 @@
   width: 100%;
 }
 input[type="number"].input-box{
-    width: 60px;
+    width: 70px;
     height: 30px;
     background-color: #e0f0ff;
     border-radius:30px;
@@ -162,7 +162,7 @@ input[type="range"]::-ms-thumb {
 .sort-container{
   background-color:#e0f0ff;
   width: 100%;
-  height: 50px;
+  height: 60px;
   margin-bottom: 10px;
   color: black;
   display: flex;
@@ -174,6 +174,7 @@ input[type="range"]::-ms-thumb {
   .sort-box {
     position: relative;
     display: inline-block;
+    z-index: 2;
   }
   .dropdown-content {
     display: none;
@@ -307,7 +308,7 @@ input[type="range"]::-ms-thumb {
   cursor: pointer;
 }
 
-.active {
+.view-sort .active {
 background-color: #E62E6B;
 box-shadow:0 0 10px blue;
 }

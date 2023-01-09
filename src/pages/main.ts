@@ -1,16 +1,14 @@
 import { mainContainer } from "../index";
-import { createHtmlElement, createHtmlInputElement } from "../components/createlement";
+import { createHtmlElement } from "../components/createlement";
 import { products } from "../components/products";
 import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "../components/firstValues";
 import { getChecked, getNumber } from "../components/filter";
 import { sorting } from "../components/btnFunc";
-
 import { cartObject } from "./cart";
 import { sumCartProduct } from "./cart";
 import { sumTotalPrice } from "./cart";
 import { cartCountElement } from "./product";
 import { totalPriceElement } from "./product";
-
 
 let found:number = products.length;
 let priceMas: string[] = [String(minPrice(products)), String(maxPrice(products))];
@@ -19,11 +17,23 @@ let searchItem: string = '';
 localStorage.sortId;
 localStorage.copyLink;
 export let view:string = 'block';
-//localStorage.view = 'block';
-localStorage.details;//*** */
+
+/* может понадобиться, при создании фильтра из юрл, обнулить все :checked
+//а может и не понадобится
+let checked = document.querySelectorAll('input[type="checkbox"]:checked');
+//console.log('+++++++++++', checked)
+  if (checked ) {
+    //console.log('---------', checked);
+    checked.forEach(el => { el.removeAttribute('checked');
+    //console.log('999', el); 
+  });
+  }
+*/
 
 export default function main(): void {
     if (mainContainer) {
+      let url = new URL(window.location.href);
+      
         mainContainer.innerHTML = "";
         mainContainer.className = 'main-container';
           const sideBar = createHtmlElement('div', 'side-Bar');
@@ -57,13 +67,26 @@ export default function main(): void {
 
 //--------------------------------------------------
 
-        input.addEventListener('change', (event) =>{
+        input.addEventListener('change', (event) => {
+        //  input.addEventListener('click', (event) =>{
                 checkedCategory.push(label.innerText);
-                console.log('checkedBrand')
-                //input.setAttribute("checked", "checked");
+                input.setAttribute('checked', 'checked');
+                //console.log('checkedBrand')
                 found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+                console.log('checkedCategory', getNumber(checkedCategory));
+                let strCategory = getNumber(checkedCategory).join(',');
+                console.log(strCategory);
+                url.searchParams.set('category', strCategory);
+                if(getNumber(checkedCategory).length === 0){
+                  url.searchParams.delete('category');
+                }
+                window.history.pushState({},'', url.href); /*
+              console.log('checkedBrand',checkedBrand);
+              console.log('priceMas',priceMas);
+              console.log('stockMas',stockMas); 
+              console.log('searchItem',searchItem);*/
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-            return true
+            //return true
               });
         }
 
@@ -85,13 +108,23 @@ export default function main(): void {
             containerBrand.append(document.createElement('br'));
 //-----------------------------------++++++++++++++++++----------------
 
-            input.oninput = function() {
+        input.addEventListener('click', (event) =>{
                 checkedBrand.push(label.innerText);
+                input.setAttribute('checked', 'checked');
                 console.log('checkedBrand',checkedBrand)
                 found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+                console.log('checkedBrand', getNumber(checkedBrand));
+                let strBrand = getNumber(checkedBrand).join(',');
+                console.log(strBrand);
+                url.searchParams.set('brand', strBrand);
+                if(getNumber(checkedBrand).length === 0){
+                  url.searchParams.delete('brand');
+                }
+                window.history.pushState({},'', url.href); 
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-            } ;
-        }
+            } 
+        )
+      }
 
 /*-----------Price----------*/
 
@@ -244,6 +277,11 @@ export default function main(): void {
         stockMas.push(`${rangeBoxs2[0].value}`,`${rangeBoxs2[1].value}`);
         priceMas.push(`${rangeBoxs[0].value}`,`${rangeBoxs[1].value}`);
         found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
+        const priceStr = priceMas.join('-');
+        const stockStr = stockMas.join('-');
+        url.searchParams.set('price', priceStr);
+        url.searchParams.set('stock', stockStr);
+        window.history.pushState({},'', url.href);
         if (found == 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
     };
 /*-----------------Sort-----------------------*/
@@ -287,139 +325,69 @@ export default function main(): void {
         for (let i = 0; i < sortList.length; i++){
             sortList[i].addEventListener("click", function() {
                 localStorage.sortId = i;
-                switch(i){
-                  case 0:btnSort.innerHTML = 'From A to Z'; break;
-                  case 1:btnSort.innerHTML = 'From Z to A'; break;
-                  case 2:btnSort.innerHTML = 'From min price to max'; break;
-                  case 3:btnSort.innerHTML = 'From max price to min'; break;
-                  default:btnSort.innerHTML = 'Sort'; break;
+                switch(i){ 
+                  case 0:btnSort.innerHTML = 'From A to Z'; break; 
+                  case 1:btnSort.innerHTML = 'From Z to A'; break; 
+                  case 2:btnSort.innerHTML = 'From min price to max'; break; 
+                  case 3:btnSort.innerHTML = 'From max price to min'; break; 
+                  default:btnSort.innerHTML = 'Sort'; break; 
                 }
-                //console.log('sortList[i]', sortList[i])
                 sorting(localStorage.sortId, getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem));
-            
-              });
+                url.searchParams.set('sort', localStorage.sortId);
+                window.history.pushState({},'', url.href);
+            });
         }
 
 /*---------------btns lineView & blockView-----------*///!!!!!!!!!!!!!!!
 
-        let collectionItem = document.querySelectorAll('.item');
-        let collectionPrice = document.querySelectorAll('.price');
-        let collectionBtnItem = document.querySelectorAll('.btn-item');
-        let collectionBtnBlock = document.querySelectorAll('.btn-Block');
-
         blockView.addEventListener("click", function() {
+            view = 'block';
+            url.searchParams.set('view', view);
+            window.history.pushState({},'', url.href);
             blockView.setAttribute("class", "active view");
             lineView.setAttribute("class", "view");
             showProducts.setAttribute("class", "main-show block");
             view = 'block';
-            //localStorage.view = 'block';
             getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem)
-            //console.log('elem', collectionItem.length)
-            //collectionItem.forEach(function(elem) { 
-          /*    for (let index = 0; index < collectionItem.length; ++index) {
-                //elem.setAttribute("class", "item item-block");
-                //console.log('elem', elem)
-                console.log('elem')
-              }//);
-            collectionPrice.forEach(function(elem) { 
-                elem.setAttribute("class", "price price-block");
-              });
-              collectionBtnItem.forEach(function(elem) { 
-                elem.setAttribute("class", "btn-item btn btn-item-block");
-            });
-            collectionBtnBlock.forEach(function(elem) { 
-                elem.setAttribute("class", "btn-Block");
-            });
-            
-            //console.log('collectionItem', collectionItem)
-          */
         });
 
         lineView.addEventListener("click", function() {
+            view = 'line';
+            url.searchParams.set('view', view);
+            window.history.pushState({},'', url.href);
             blockView.setAttribute("class", "view");
             lineView.setAttribute("class", "active view");
             showProducts.setAttribute("class", "main-show line");
             view = 'line';
-            //localStorage.view = 'line';
             getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem)
-            /*
-            console.log('elem', collectionItem.length)
-            for (let index = 0; index < collectionItem.length; ++index) {
-              collectionItem[index].setAttribute("class", "item item-line");
-              console.log('555')
-            }
-            /*
-            collectionItem.forEach(function(elem) { 
-                elem.setAttribute("class", "item item-line");
-              });*/
-      /*      collectionPrice.forEach(function(elem) { 
-                elem.setAttribute("class", "price price-line");
-              });
-            collectionBtnItem.forEach(function(elem) { 
-                elem.setAttribute("class", "btn-item btn btn-item-line");
-            });
-            collectionBtnBlock.forEach(function(elem) { 
-                elem.setAttribute("class", "btn-Block btn-Block-line");
-            });
-            //console.log('collectionItem', collectionItem)
-            //console.log('wer', view)
-          */
         });
 
 /*---------------btns Add & Details-----------*///!!!!!!!!!!!
 
-        let addBtns = document.querySelectorAll('.btn-item-add')
-        //console.log('addBtns=', addBtns);
-/*        for(let i =0; i < addBtns.length; i++){
-          //console.log('i=', i);
-          addBtns[i].addEventListener("click", function() {
-            console.log('click=', addBtns[i]);
-            const productId = addBtns[i]//.dataset.id;
-          });
-    }
-*/
+        let addBtns = document.querySelectorAll('.btn-item-add');
 
-
-
-        
         document.addEventListener('click', (event)=>{
           if(event.target && event.target instanceof HTMLElement){
             if(event.target.classList.contains('btn-item-add')){
               const productId = event.target.dataset.id;
-              console.log('productId',productId);//
-              if(productId){
+              //console.log('productId',productId);
+              if(productId !== undefined){
                   if(!cartObject.hasOwnProperty(productId)){
-                    console.log('i haven`t this product');
+                    //console.log('i haven`t this product');
                     cartObject[productId] = 1;
                     if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
                     if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
                     event.target.innerHTML = 'Drop';
-                    //event.target.setAttribute('class', 'btn-item btn btn-item-del');
-                    console.log('cartCountElement add', cartCountElement);
                   }else if(cartObject.hasOwnProperty(productId)){
-                    console.log('i have this product');
+                    //console.log('i have this product');
                     delete cartObject[productId];
                     if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
                     if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
                     event.target.innerHTML = 'Add';
-                    //event.target.setAttribute('class', 'btn-item btn btn-item-add');
-                    console.log('cartCountElement del', cartCountElement);
                   }
             }
           }
         }})
-        /*addBtns.forEach(button =>{
-          button.addEventListener('click', () => {
-          if(addBtns instanceof HTMLButtonElement){
-            const productId = addBtns.dataset.id;
-            console.log(productId);
-          }
-        })
-      })*/
-
-
-
-
 
 /*---------------SEARCH-----------*/
 
@@ -431,10 +399,14 @@ export default function main(): void {
             found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
             if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
         });
-            //console.log('searchDel=', searchDel);
 
         searchBox.onkeyup = function(event) {
             searchItem = searchBox.value;
+            url.searchParams.set('search', searchItem);
+            if(searchItem === ''){
+              url.searchParams.delete('search');
+            }
+            window.history.pushState({},'', url.href);
             found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
             if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
         };
@@ -449,13 +421,14 @@ export default function main(): void {
 
 //--------------------RESET-------------------------------
         btnReset.addEventListener('click', () => {
-            let c = document.getElementsByTagName("input");//обнуление чеков
+            let c = document.getElementsByTagName("input");
             for (let i = 0; i < c.length; i++){
                 c[i].checked = false;
             }
             checkedCategory = [];
             searchItem = searchBox.value ='';
             checkedBrand = [];
+            btnSort.innerHTML = 'Sort';
             rangeBoxs[0].value = String(minPrice(products));
             rangeBoxs[1].value = String(maxPrice(products));
             rangeBoxs2[0].value = String(minStock(products));
@@ -463,11 +436,38 @@ export default function main(): void {
             stockMas = [String(minStock(products)), String(maxStock(products))];
             priceMas = [String(minPrice(products)), String(maxPrice(products))];
             found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
-            //localStorage.sortId = '';
+
             btnSort.innerHTML = 'Sort'
-            //localStorage.sortId = 0;
+            localStorage.sortId ='';
+            /*url.searchParams.forEach((value, key) =>{
+              console.log(key);
+              url.searchParams.delete(key);
+            })*/
+            if (url.searchParams.has('sort')) {
+              url.searchParams.delete('sort');
+            }
+            if (url.searchParams.has('price')) {
+              url.searchParams.delete('price');
+            }
+            if (url.searchParams.has('stock')) {
+              url.searchParams.delete('stock');
+            }
+            if (url.searchParams.has('brand')) {
+              url.searchParams.delete('brand');
+            }
+            if (url.searchParams.has('category')) {
+              url.searchParams.delete('category');
+            }
+            if (url.searchParams.has('search')) {
+              url.searchParams.delete('search');
+            }
+            if (url.searchParams.has('view')) {
+              url.searchParams.delete('view');
+            }
+            console.log('url.searchParams', url.searchParams.toString());
+              window.history.pushState({}, '', window.location.pathname);
         });
-        //console.log('localStorage.copyLink=', localStorage.copyLink);
+
 //--------------------COPY-------------------------------
         btnCopy.addEventListener('click', () => {
             let copy = document.location.href;

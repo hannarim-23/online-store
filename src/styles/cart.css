@@ -102,12 +102,17 @@
   .summary-total-price.active{
     text-decoration: line-through;
   }
+  .promo-container{
+    margin-bottom: 10px;
+  }
   .promo-title{
     font-weight: bold;
     color: #1c7bf7;
   }
   .promo-text-add-container,
   .promo-active-item{
+    margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     gap: 20px;
     align-items: center;
@@ -142,6 +147,11 @@
   }
   .promo-add-text{
     color: #000000;
+  }
+  .product-price-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   .products-count-summary,
   .summary-total-price,

@@ -44,16 +44,17 @@ function router(link: HTMLAnchorElement) {
     window.dispatchEvent(new Event('popstate'));
 }
 
-document.addEventListener('click', (event: MouseEvent) => {
-    event.preventDefault();
+document.addEventListener('click', (event) => {
+    //event.preventDefault();
     if (event.target instanceof HTMLAnchorElement) {
-		
+		event.preventDefault();
         router(event.target);
     }
 
     const { parentElement } = event.target as HTMLLinkElement;
 
     if (parentElement instanceof HTMLAnchorElement) {
+		event.preventDefault();
         router(parentElement);
     }
 });
