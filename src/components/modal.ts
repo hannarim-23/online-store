@@ -70,7 +70,7 @@ export function showModal(){
         inputAddress.type = 'text';
         inputAddress.setAttribute("required", "");
         inputAddress.placeholder = 'three-word delivery address';
-        inputAddress.pattern = "^([0-9a-zа-яA-ZА-Я\,]{5,}) ([0-9a-zа-яA-ZА-Я\,]{5,}) ([0-9a-zа-яA-ZА-Я\-]{5,})$";
+        inputAddress.pattern = "^([0-9a-zа-яA-ZА-Я\,]{5,}) ([0-9a-zа-яA-ZА-Я\,]{5,}) ([0-9a-zа-яA-ZА-Я\-]{5,})(.)*$";
         btnConfirm.addEventListener('click', ()=>{
             if(!inputAddress.checkValidity() && !addressTextError.classList.contains('active')){
                 addressTextError.classList.add('active');
