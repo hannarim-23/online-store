@@ -45,7 +45,7 @@ function router(link: HTMLAnchorElement) {
 }
 
 document.addEventListener('click', (event) => {
-    //event.preventDefault();
+
     if (event.target instanceof HTMLAnchorElement) {
 		event.preventDefault();
         router(event.target);
@@ -65,7 +65,7 @@ let m: RegExpExecArray|null;
 
 export const renderUI = () => {
 	let url = window.location.pathname;
-	console.log(url);
+
     //let route = routes.find((route) => window.location.pathname.includes(route.path));
 	if(url === '/cart'){
 		routes[1].template();

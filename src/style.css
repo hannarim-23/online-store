@@ -5,6 +5,7 @@
 @import "./styles/modal.css";
 @import "./styles/product.css";
 @import "./styles/main-page";
+@import "./styles/404.css";
 
 body{
     color: #000000;
