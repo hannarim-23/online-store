@@ -1,9 +1,16 @@
 import { mainContainer } from "../index";
-import { createHtmlElement } from "../components/createlement";
+import { createHtmlElement, createHtmlInputElement } from "../components/createlement";
 import { products } from "../components/products";
 import { getBrands, getCategory, maxPrice, minPrice, maxStock, minStock } from "../components/firstValues";
-import { getChecked } from "../components/filter";
+import { getChecked, getNumber } from "../components/filter";
 import { sorting } from "../components/btnFunc";
+
+import { cartObject } from "./cart";
+import { sumCartProduct } from "./cart";
+import { sumTotalPrice } from "./cart";
+import { cartCountElement } from "./product";
+import { totalPriceElement } from "./product";
+
 
 let found:number = products.length;
 let priceMas: string[] = [String(minPrice(products)), String(maxPrice(products))];
@@ -11,6 +18,8 @@ let stockMas: string[] = [String(minStock(products)), String(maxStock(products))
 let searchItem: string = '';
 localStorage.sortId;
 localStorage.copyLink;
+export let view:string = 'block';
+//localStorage.view = 'block';
 localStorage.details;//*** */
 
 export default function main(): void {
@@ -48,11 +57,14 @@ export default function main(): void {
 
 //--------------------------------------------------
 
-            input.addEventListener('change', (event) =>{
+        input.addEventListener('change', (event) =>{
                 checkedCategory.push(label.innerText);
+                console.log('checkedBrand')
+                //input.setAttribute("checked", "checked");
                 found = getChecked(showProducts, numOfFound,products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
-            });
+            return true
+              });
         }
 
 /*-----------------Brand-----------------------*/
@@ -75,6 +87,7 @@ export default function main(): void {
 
             input.oninput = function() {
                 checkedBrand.push(label.innerText);
+                console.log('checkedBrand',checkedBrand)
                 found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
                 if (found === 0) showProducts.append(createHtmlElement('p', 'warning', '', 'No products found'));
             } ;
@@ -270,11 +283,21 @@ export default function main(): void {
         getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem);
 
         let sortList = menuSort.children;
+        console.log('menuSort', menuSort, 'menuSort.children', menuSort.children)
         for (let i = 0; i < sortList.length; i++){
             sortList[i].addEventListener("click", function() {
                 localStorage.sortId = i;
+                switch(i){
+                  case 0:btnSort.innerHTML = 'From A to Z'; break;
+                  case 1:btnSort.innerHTML = 'From Z to A'; break;
+                  case 2:btnSort.innerHTML = 'From min price to max'; break;
+                  case 3:btnSort.innerHTML = 'From max price to min'; break;
+                  default:btnSort.innerHTML = 'Sort'; break;
+                }
+                //console.log('sortList[i]', sortList[i])
                 sorting(localStorage.sortId, getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem));
-            });
+            
+              });
         }
 
 /*---------------btns lineView & blockView-----------*///!!!!!!!!!!!!!!!
@@ -288,10 +311,16 @@ export default function main(): void {
             blockView.setAttribute("class", "active view");
             lineView.setAttribute("class", "view");
             showProducts.setAttribute("class", "main-show block");
-
-            collectionItem.forEach(function(elem) { 
-                elem.setAttribute("class", "item item-block");
-              });
+            view = 'block';
+            //localStorage.view = 'block';
+            getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem)
+            //console.log('elem', collectionItem.length)
+            //collectionItem.forEach(function(elem) { 
+          /*    for (let index = 0; index < collectionItem.length; ++index) {
+                //elem.setAttribute("class", "item item-block");
+                //console.log('elem', elem)
+                console.log('elem')
+              }//);
             collectionPrice.forEach(function(elem) { 
                 elem.setAttribute("class", "price price-block");
               });
@@ -301,17 +330,29 @@ export default function main(): void {
             collectionBtnBlock.forEach(function(elem) { 
                 elem.setAttribute("class", "btn-Block");
             });
+            
+            //console.log('collectionItem', collectionItem)
+          */
         });
 
         lineView.addEventListener("click", function() {
             blockView.setAttribute("class", "view");
             lineView.setAttribute("class", "active view");
             showProducts.setAttribute("class", "main-show line");
-
+            view = 'line';
+            //localStorage.view = 'line';
+            getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem)
+            /*
+            console.log('elem', collectionItem.length)
+            for (let index = 0; index < collectionItem.length; ++index) {
+              collectionItem[index].setAttribute("class", "item item-line");
+              console.log('555')
+            }
+            /*
             collectionItem.forEach(function(elem) { 
                 elem.setAttribute("class", "item item-line");
-              });
-            collectionPrice.forEach(function(elem) { 
+              });*/
+      /*      collectionPrice.forEach(function(elem) { 
                 elem.setAttribute("class", "price price-line");
               });
             collectionBtnItem.forEach(function(elem) { 
@@ -320,15 +361,63 @@ export default function main(): void {
             collectionBtnBlock.forEach(function(elem) { 
                 elem.setAttribute("class", "btn-Block btn-Block-line");
             });
+            //console.log('collectionItem', collectionItem)
+            //console.log('wer', view)
+          */
         });
 
 /*---------------btns Add & Details-----------*///!!!!!!!!!!!
 
         let addBtns = document.querySelectorAll('.btn-item-add')
-        console.log('addBtns=', addBtns);
-        /*addBtns.addEventListener('click' () => {
+        //console.log('addBtns=', addBtns);
+/*        for(let i =0; i < addBtns.length; i++){
+          //console.log('i=', i);
+          addBtns[i].addEventListener("click", function() {
+            console.log('click=', addBtns[i]);
+            const productId = addBtns[i]//.dataset.id;
+          });
+    }
+*/
 
-        /*})
+
+
+        
+        document.addEventListener('click', (event)=>{
+          if(event.target && event.target instanceof HTMLElement){
+            if(event.target.classList.contains('btn-item-add')){
+              const productId = event.target.dataset.id;
+              console.log('productId',productId);//
+              if(productId){
+                  if(!cartObject.hasOwnProperty(productId)){
+                    console.log('i haven`t this product');
+                    cartObject[productId] = 1;
+                    if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+                    if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+                    event.target.innerHTML = 'Drop';
+                    //event.target.setAttribute('class', 'btn-item btn btn-item-del');
+                    console.log('cartCountElement add', cartCountElement);
+                  }else if(cartObject.hasOwnProperty(productId)){
+                    console.log('i have this product');
+                    delete cartObject[productId];
+                    if(cartCountElement) cartCountElement.innerHTML = `${sumCartProduct(cartObject)}`;
+                    if(totalPriceElement) totalPriceElement.innerHTML = `${sumTotalPrice(cartObject)} $`;
+                    event.target.innerHTML = 'Add';
+                    //event.target.setAttribute('class', 'btn-item btn btn-item-add');
+                    console.log('cartCountElement del', cartCountElement);
+                  }
+            }
+          }
+        }})
+        /*addBtns.forEach(button =>{
+          button.addEventListener('click', () => {
+          if(addBtns instanceof HTMLButtonElement){
+            const productId = addBtns.dataset.id;
+            console.log(productId);
+          }
+        })
+      })*/
+
+
 
 
 
@@ -374,8 +463,9 @@ export default function main(): void {
             stockMas = [String(minStock(products)), String(maxStock(products))];
             priceMas = [String(minPrice(products)), String(maxPrice(products))];
             found = getChecked(showProducts, numOfFound, products, checkedCategory, checkedBrand, priceMas, stockMas, searchItem).length;
-            localStorage.sortId ='';
-            
+            //localStorage.sortId = '';
+            btnSort.innerHTML = 'Sort'
+            //localStorage.sortId = 0;
         });
         //console.log('localStorage.copyLink=', localStorage.copyLink);
 //--------------------COPY-------------------------------
